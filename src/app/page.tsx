@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import Navbar from "@/components/Navbar";
 
 const featuredItems = [
@@ -30,7 +31,7 @@ export default function HomePage() {
       <Navbar />
 
       {/* ── Hero ── */}
-      <section className="relative h-screen min-h-[600px] flex items-end">
+      <section className="relative h-screen min-h-[600px] flex items-center justify-center">
         {/* Background */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -39,23 +40,21 @@ export default function HomePage() {
           aria-hidden="true"
           className="absolute inset-0 w-full h-full object-cover"
         />
-        {/* Gradient overlay — dark bottom, lighter top */}
+        {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/10" />
 
         {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pb-20 w-full">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 w-full flex flex-col items-center text-center">
+          <Image
+            src="/images/logo.jpeg"
+            width={200}
+            height={200}
+            alt="Ooo..FAT!"
+            className="rounded-full mb-8 shadow-2xl"
+          />
           <p className="text-[#FFD700] text-xs font-bold tracking-[0.3em] uppercase mb-5">
             Open Daily 6PM – 2AM · Drive-Thru Only · Birmingham
           </p>
-          <h1
-            className="text-white leading-none mb-5"
-            style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: "clamp(4rem, 14vw, 11rem)",
-            }}
-          >
-            Ooo..FAT!
-          </h1>
           <p className="text-xl md:text-2xl text-gray-200 mb-8 max-w-lg font-light">
             Smashed Angus Beef. Brioche Bun. No Compromises.
           </p>
@@ -119,7 +118,6 @@ export default function HomePage() {
                 key={item.name}
                 className="bg-[#1a1a1a] rounded overflow-hidden group"
               >
-                {/* Image — fills 70% of card height */}
                 <div className="h-44 overflow-hidden">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -128,7 +126,6 @@ export default function HomePage() {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
-                {/* Dark strip */}
                 <div className="p-4">
                   <p className="text-white font-bold text-sm md:text-base leading-snug">
                     {item.name}
@@ -189,20 +186,19 @@ export default function HomePage() {
           </p>
           <div className="rounded overflow-hidden shadow-lg">
             <iframe
-              src="https://maps.google.com/maps?q=0x4870bb1eac019927:0xd2a6095bd7a5747f&output=embed"
+              src="https://maps.google.com/maps?q=878+Kingsbury+Rd,+Birmingham+B24+9PT&output=embed"
               width="100%"
               height="400"
               style={{ border: 0 }}
               allowFullScreen
               loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
               title="Ooo..FAT! Location"
             />
           </div>
           <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-8 text-[#333333]">
             <div className="flex items-center gap-2">
               <span className="text-[#FFD700] text-xl">📍</span>
-              <span className="font-semibold">Birmingham, UK</span>
+              <span className="font-semibold">878 Kingsbury Rd, Birmingham B24 9PT</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-[#FFD700] text-xl">🕕</span>
@@ -218,7 +214,7 @@ export default function HomePage() {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-8 pb-8 border-b border-gray-800">
             <p
               className="text-[#FFD700] text-3xl"
-              style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.1em" }}
+              style={{ fontFamily: "var(--font-permanent-marker), cursive", letterSpacing: "0.05em" }}
             >
               Ooo..FAT!
             </p>

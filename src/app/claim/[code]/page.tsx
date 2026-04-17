@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { use } from "react";
 
 type Params = { code: string };
@@ -39,12 +40,13 @@ export default function ClaimPage({ params }: { params: Promise<Params> }) {
     <div className="min-h-screen bg-[#111111] flex flex-col items-center justify-center px-4 py-10">
       {/* Logo */}
       <Link href="/" className="mb-8">
-        <span
-          className="text-4xl text-[#FFD700]"
-          style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.1em" }}
-        >
-          Ooo..FAT!
-        </span>
+        <Image
+          src="/images/logo.jpeg"
+          width={80}
+          height={80}
+          alt="Ooo..FAT!"
+          className="rounded-full"
+        />
       </Link>
 
       <div className="w-full max-w-sm bg-white rounded overflow-hidden shadow-2xl">

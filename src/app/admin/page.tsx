@@ -91,11 +91,12 @@ export default function AdminPage() {
     setGenerating(false);
   };
 
-  const downloadQr = () => {
-    if (!generatedQr) return;
+  const downloadQr = (qr?: GeneratedQr) => {
+    const target = qr ?? generatedQr;
+    if (!target) return;
     const a = document.createElement("a");
-    a.href = generatedQr.qrDataUrl;
-    a.download = `ooo-fat-receipt-${generatedQr.code.slice(0, 8)}-£${generatedQr.spendAmount}.png`;
+    a.href = target.qrDataUrl;
+    a.download = `receipt-qr-${target.code}.png`;
     a.click();
   };
 
@@ -124,7 +125,7 @@ export default function AdminPage() {
   if (!session) {
     return (
       <div className="min-h-screen bg-[#111111] flex flex-col items-center justify-center px-4">
-        <span className="text-4xl text-[#FFD700] mb-6" style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.1em" }}>Ooo..FAT! Admin</span>
+        <span className="text-4xl text-[#FFD700] mb-6" style={{ fontFamily: "var(--font-permanent-marker), cursive" }}>Ooo..FAT! Admin</span>
         <div className="bg-white rounded-xl p-8 max-w-sm w-full text-center shadow-2xl">
           <p className="text-[#333333] mb-5">Sign in with your admin email to continue.</p>
           <button onClick={() => signIn()} className="btn-primary w-full py-3 text-base" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
@@ -161,7 +162,7 @@ export default function AdminPage() {
       <header className="bg-[#111111] sticky top-0 z-10 shadow-lg">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/" className="text-xl text-[#FFD700]" style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.08em" }}>
+            <Link href="/" className="text-xl text-[#FFD700]" style={{ fontFamily: "var(--font-permanent-marker), cursive" }}>
               Ooo..FAT!
             </Link>
             <span className="text-gray-600 text-sm hidden sm:block">/ Admin</span>
@@ -264,11 +265,13 @@ export default function AdminPage() {
                 <img
                   src={generatedQr.qrDataUrl}
                   alt="QR Code"
-                  className="mx-auto mb-4 w-48 h-48"
+                  className="mx-auto mb-4 w-48 h-48 cursor-pointer"
+                  onClick={() => downloadQr(generatedQr)}
+                  title="Click to download"
                 />
                 <p className="text-xs text-gray-400 mb-4 font-mono break-all">{generatedQr.claimUrl}</p>
                 <button
-                  onClick={downloadQr}
+                  onClick={() => downloadQr()}
                   className="btn-primary w-full py-3"
                   style={{ fontFamily: "'Bebas Neue', sans-serif" }}
                 >

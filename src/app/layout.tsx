@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bebas_Neue, Inter } from "next/font/google";
+import { Bebas_Neue, Inter, Permanent_Marker } from "next/font/google";
 import "./globals.css";
 import SessionProvider from "@/components/SessionProvider";
 
@@ -7,6 +7,13 @@ const bebasNeue = Bebas_Neue({
   weight: "400",
   subsets: ["latin"],
   variable: "--font-bebas",
+  display: "swap",
+});
+
+const permanentMarker = Permanent_Marker({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-permanent-marker",
   display: "swap",
 });
 
@@ -33,7 +40,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${bebasNeue.variable} ${inter.variable}`}>
+    <html lang="en" className={`${bebasNeue.variable} ${permanentMarker.variable} ${inter.variable}`}>
       <body className="antialiased">
         <SessionProvider>{children}</SessionProvider>
       </body>

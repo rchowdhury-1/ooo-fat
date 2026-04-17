@@ -14,12 +14,21 @@ export async function initDb() {
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
       email TEXT UNIQUE NOT NULL,
       name TEXT,
+      "emailVerified" TIMESTAMPTZ,
+      image TEXT,
       points INTEGER DEFAULT 0,
       total_spent NUMERIC(10,2) DEFAULT 0,
       is_admin BOOLEAN DEFAULT false,
       created_at TIMESTAMPTZ DEFAULT NOW()
     )
   `;
+
+  // Add columns to existing tables if they were created without them
+  await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "emailVerified" TIMESTAMPTZ`;
+  await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS image TEXT`;
+  await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS points INTEGER DEFAULT 0`;
+  await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS total_spent NUMERIC(10,2) DEFAULT 0`;
+  await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false`;
 
   await sql`
     CREATE TABLE IF NOT EXISTS qr_codes (

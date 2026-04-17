@@ -8,10 +8,39 @@ Smash burger drive-thru website for Ooo..FAT!, Birmingham.
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **Database**: PostgreSQL via [Neon](https://neon.tech)
-- **Auth**: NextAuth.js v5 (magic link / email)
+- **Auth**: NextAuth.js v5 (magic link / email via Resend)
 - **Email**: [Resend](https://resend.com)
 - **QR Codes**: `qrcode` npm package
 - **Deployment**: Vercel
+
+---
+
+## Environment Variables
+
+Create a `.env.local` file in the project root with the following:
+
+```env
+# Database (Neon PostgreSQL — must include ?sslmode=require)
+DATABASE_URL=postgresql://user:pass@host/dbname?sslmode=require
+
+# NextAuth
+NEXTAUTH_SECRET=your-secret-here-generate-with-openssl-rand-base64-32
+NEXTAUTH_URL=http://localhost:3000
+
+# Resend (email magic links)
+RESEND_API_KEY=re_xxxxxxxxxxxxx
+
+# Admin
+ADMIN_EMAIL=razwanulchowdhury@gmail.com
+```
+
+| Variable | Where to get it |
+|---|---|
+| `DATABASE_URL` | [neon.tech](https://neon.tech) → Project → Connection string (add `?sslmode=require` if not present) |
+| `NEXTAUTH_SECRET` | Run: `openssl rand -base64 32` |
+| `NEXTAUTH_URL` | `http://localhost:3000` locally · your production URL on Vercel |
+| `RESEND_API_KEY` | [resend.com](https://resend.com) → API Keys |
+| `ADMIN_EMAIL` | `razwanulchowdhury@gmail.com` |
 
 ---
 
@@ -24,21 +53,20 @@ cd ~/Desktop/Coding/ooo-fat
 npm install
 ```
 
-### 2. Environment variables
+### 2. Copy environment variables
 
 ```bash
 cp .env.example .env.local
+# Then fill in the values
 ```
 
-| Variable | Where to get it |
-|---|---|
-| `DATABASE_URL` | [neon.tech](https://neon.tech) — Create project → Connection string |
-| `NEXTAUTH_SECRET` | Run: `openssl rand -base64 32` |
-| `NEXTAUTH_URL` | `http://localhost:3000` locally |
-| `RESEND_API_KEY` | [resend.com](https://resend.com) → API Keys |
-| `ADMIN_EMAIL` | `razwanulchowdhury@gmail.com` |
+### 3. Run locally
 
-### 3. Initialise the database
+```bash
+npm run dev
+```
+
+### 4. Initialise the database
 
 After starting the dev server, visit once to create all tables:
 
@@ -46,10 +74,41 @@ After starting the dev server, visit once to create all tables:
 http://localhost:3000/api/init
 ```
 
-### 4. Run locally
+---
+
+## Deployment (Vercel)
+
+### 1. Install Vercel CLI and deploy
 
 ```bash
-npm run dev
+npm i -g vercel
+vercel
+```
+
+### 2. Add environment variables to Vercel
+
+```bash
+vercel env add DATABASE_URL
+vercel env add NEXTAUTH_SECRET
+vercel env add NEXTAUTH_URL      # set to your production URL e.g. https://ooo-fat.vercel.app
+vercel env add RESEND_API_KEY
+vercel env add ADMIN_EMAIL
+```
+
+Or add them via the Vercel dashboard → Project → Settings → Environment Variables.
+
+### 3. Deploy to production
+
+```bash
+vercel --prod
+```
+
+### 4. Initialise the database in production
+
+Visit once after first production deploy:
+
+```
+https://yourdomain.com/api/init
 ```
 
 ---
@@ -91,24 +150,6 @@ Only the `ADMIN_EMAIL` account can access this.
 
 ---
 
-## Deployment (Vercel)
-
-```bash
-npm i -g vercel
-vercel
-
-# Add env vars
-vercel env add DATABASE_URL
-vercel env add NEXTAUTH_SECRET
-vercel env add NEXTAUTH_URL      # set to your production URL
-vercel env add RESEND_API_KEY
-vercel env add ADMIN_EMAIL
-```
-
-Then visit `https://yourdomain.com/api/init` once to create tables.
-
----
-
 ## Project Structure
 
 ```
@@ -116,7 +157,7 @@ src/
 ├── app/
 │   ├── page.tsx                      Homepage
 │   ├── layout.tsx                    Root layout + session provider
-│   ├── globals.css                   Brand styles + Google Fonts
+│   ├── globals.css                   Brand styles
 │   ├── menu/page.tsx                 Menu with sticky category nav
 │   ├── loyalty/page.tsx              Loyalty dashboard
 │   ├── claim/[code]/page.tsx         Receipt QR claim flow
@@ -133,10 +174,13 @@ src/
 │       ├── admin/customers/          Customer list
 │       └── admin/adjust-points/      Manual points adjustment
 ├── components/
+│   ├── Navbar.tsx
 │   └── SessionProvider.tsx
 ├── lib/
 │   ├── auth.ts                       NextAuth + Resend config
 │   └── db.ts                         Neon SQL client + schema
-├── middleware.ts                     Admin route guard
-└── types/next-auth.d.ts              Session type extensions
+└── middleware.ts                     Admin route guard
+public/
+└── images/
+    └── logo.jpeg                     Restaurant logo
 ```
