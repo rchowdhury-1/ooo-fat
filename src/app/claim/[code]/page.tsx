@@ -159,18 +159,18 @@ export default function ClaimPage({ params }: { params: Promise<Params> }) {
                 <p className="text-gray-400 text-xs mb-3 uppercase tracking-[0.2em] font-semibold">
                   Your Stamp Card
                 </p>
-                <div className="grid grid-cols-8 gap-1 mb-3">
+                <div className="grid grid-cols-4 gap-2 mb-3">
                   {Array.from({ length: STAMPS_PER_REWARD }).map((_, i) => {
                     const stampsInCycle = (result.newStamps ?? 0) % STAMPS_PER_REWARD;
                     const filled = i < stampsInCycle;
                     return (
                       <div
                         key={i}
-                        className={`aspect-square rounded flex items-center justify-center text-xs ${
+                        className={`aspect-square rounded-lg flex items-center justify-center text-xl ${
                           filled ? "bg-[#FFD700]" : "bg-gray-800 border border-gray-700"
                         }`}
                       >
-                        {filled ? "🍔" : ""}
+                        {filled ? "🍔" : <span className="text-gray-600 text-xs font-bold">{i + 1}</span>}
                       </div>
                     );
                   })}

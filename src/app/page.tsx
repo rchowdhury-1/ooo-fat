@@ -45,18 +45,20 @@ export default function HomePage() {
 
         {/* Content — centred over photo */}
         <div className="relative z-10 flex flex-col items-center text-center px-4">
-          {/* Logo */}
+          {/* Logo — smaller on mobile so content fits above the fold */}
           <Image
             src="/images/logo.jpeg"
             width={200}
             height={200}
             alt="Ooo..FAT!"
-            className="rounded-full mb-6 shadow-2xl ring-4 ring-[#FFD700]/30"
+            className="rounded-full mb-5 shadow-2xl ring-4 ring-[#FFD700]/30 w-32 h-32 md:w-[180px] md:h-[180px]"
           />
 
-          {/* Label */}
-          <p className="text-[#FFD700] text-xs font-bold tracking-[0.35em] uppercase mb-4">
-            Open Daily 6PM – 2AM · Drive-Thru Only · Birmingham
+          {/* Label — two lines on mobile to avoid overflow */}
+          <p className="text-[#FFD700] text-[10px] md:text-xs font-bold tracking-[0.25em] md:tracking-[0.35em] uppercase mb-3 leading-relaxed">
+            Open Daily 6PM – 2AM<br className="sm:hidden" />
+            <span className="hidden sm:inline"> · </span>
+            Drive-Thru Only · Birmingham
           </p>
 
           {/* Headline */}
@@ -64,18 +66,18 @@ export default function HomePage() {
             className="text-white mb-3 leading-none"
             style={{
               fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: "clamp(3.5rem, 10vw, 7rem)",
+              fontSize: "clamp(2.8rem, 10vw, 7rem)",
               letterSpacing: "0.04em",
             }}
           >
             Smashed to Order.
           </h1>
 
-          <p className="text-gray-300 text-lg md:text-xl mb-8 max-w-md font-light">
+          <p className="text-gray-300 text-base md:text-xl mb-7 max-w-xs md:max-w-md font-light">
             Angus beef · Brioche bun · No compromises.
           </p>
 
-          <div className="flex flex-wrap gap-4 justify-center">
+          <div className="flex flex-wrap gap-3 md:gap-4 justify-center">
             <Link href="/menu" className="btn-primary text-lg px-10 py-4">
               View Menu
             </Link>
@@ -129,8 +131,8 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Photo stack */}
-          <div className="flex-1 grid grid-cols-2 gap-3 max-w-sm md:max-w-none">
+          {/* Photo stack — hidden on mobile to keep hero clean, visible md+ */}
+          <div className="hidden md:flex flex-1 grid grid-cols-2 gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400"
@@ -209,12 +211,12 @@ export default function HomePage() {
       {/* ── Loyalty Teaser ── */}
       <section className="bg-[#111111] py-20 px-4">
         <div className="max-w-2xl mx-auto text-center">
-          {/* Stamp card preview */}
-          <div className="flex justify-center gap-2 mb-6">
+          {/* Stamp card preview — 4×2 on mobile, 8×1 on md+ */}
+          <div className="grid grid-cols-4 md:grid-cols-8 gap-2 max-w-[260px] md:max-w-none mx-auto mb-6">
             {Array.from({ length: 8 }).map((_, i) => (
               <div
                 key={i}
-                className={`w-9 h-9 rounded-lg flex items-center justify-center text-base ${
+                className={`w-full aspect-square rounded-lg flex items-center justify-center text-lg md:text-base ${
                   i < 5
                     ? "bg-[#FFD700]"
                     : "bg-gray-800 border border-gray-700"

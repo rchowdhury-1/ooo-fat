@@ -115,23 +115,26 @@ export default function LoyaltyPage() {
         {!session ? (
           <>
             {/* How it works */}
-            <div className="grid grid-cols-3 gap-3 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
               {[
-                { step: "1", text: "Order a burger at the drive-thru" },
-                { step: "2", text: "Scan the QR on your receipt" },
-                { step: "3", text: "Hit 8 stamps — free burger!" },
-              ].map(({ step, text }) => (
+                { step: "1", icon: "🚗", text: "Order a burger at the drive-thru" },
+                { step: "2", icon: "📲", text: "Scan the QR code on your receipt" },
+                { step: "3", icon: "🍔", text: "Hit 8 stamps — get a free burger!" },
+              ].map(({ step, icon, text }) => (
                 <div
                   key={step}
-                  className="text-center p-4 bg-white rounded border border-gray-200 shadow-sm"
+                  className="flex sm:flex-col items-center sm:items-center gap-4 sm:gap-1 p-4 bg-white rounded border border-gray-200 shadow-sm"
                 >
                   <div
-                    className="text-3xl text-[#FFD700] mb-1"
+                    className="text-3xl text-[#FFD700] shrink-0"
                     style={{ fontFamily: "'Bebas Neue', sans-serif" }}
                   >
                     {step}
                   </div>
-                  <p className="text-sm text-[#444444]">{text}</p>
+                  <div className="text-left sm:text-center">
+                    <span className="text-xl">{icon}</span>
+                    <p className="text-sm text-[#444444] sm:mt-1">{text}</p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -225,14 +228,14 @@ export default function LoyaltyPage() {
                 </div>
               </div>
 
-              {/* 8 burger stamp slots */}
-              <div className="grid grid-cols-8 gap-2 mb-4">
+              {/* 8 burger stamp slots — 4×2 on mobile, 8×1 on md+ */}
+              <div className="grid grid-cols-4 md:grid-cols-8 gap-2 mb-4">
                 {Array.from({ length: STAMPS_PER_REWARD }).map((_, i) => {
                   const filled = i < stampsInCycle;
                   return (
                     <div key={i} className="flex flex-col items-center gap-1">
                       <div
-                        className={`w-full aspect-square rounded-lg flex items-center justify-center text-xl transition-all ${
+                        className={`w-full aspect-square rounded-lg flex items-center justify-center text-2xl md:text-xl transition-all ${
                           filled
                             ? "bg-[#FFD700] shadow-md shadow-yellow-900/30"
                             : "bg-gray-800 border border-gray-700"
