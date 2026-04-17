@@ -10,16 +10,18 @@ export async function GET() {
 
   const sql = getDb();
   const [totalCustomers] = await sql`SELECT COUNT(*) AS count FROM users WHERE is_admin = false`;
-  const [totalPoints] = await sql`SELECT COALESCE(SUM(points), 0) AS total FROM users`;
+  const [totalStamps] = await sql`SELECT COALESCE(SUM(stamps), 0) AS total FROM users WHERE is_admin = false`;
   const [totalRedeemed] = await sql`SELECT COUNT(*) AS count FROM rewards WHERE redeemed = true`;
   const [totalQr] = await sql`SELECT COUNT(*) AS count FROM qr_codes`;
   const [claimedQr] = await sql`SELECT COUNT(*) AS count FROM qr_codes WHERE claimed_by IS NOT NULL`;
+  const [burgerQr] = await sql`SELECT COUNT(*) AS count FROM qr_codes WHERE includes_burger = true AND claimed_by IS NOT NULL`;
 
   return NextResponse.json({
     totalCustomers: Number(totalCustomers.count),
-    totalPointsIssued: Number(totalPoints.total),
+    totalStampsIssued: Number(totalStamps.total),
     totalRewardsRedeemed: Number(totalRedeemed.count),
     totalQrCodes: Number(totalQr.count),
     claimedQrCodes: Number(claimedQr.count),
+    burgerStampsAwarded: Number(burgerQr.count),
   });
 }

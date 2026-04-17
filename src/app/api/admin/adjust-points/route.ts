@@ -8,9 +8,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const { email, points, reason } = await req.json();
-  if (!email || typeof points !== "number" || !reason) {
-    return NextResponse.json({ error: "email, points (number), and reason required" }, { status: 400 });
+  const { email, stamps, reason } = await req.json();
+  if (!email || typeof stamps !== "number" || !reason) {
+    return NextResponse.json({ error: "email, stamps (number), and reason required" }, { status: 400 });
   }
 
   const sql = getDb();
@@ -19,14 +19,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
   const user = userRows[0];
-  const newPoints = Math.max(0, (user.points || 0) + points);
+  const newStamps = Math.max(0, (user.stamps || 0) + stamps);
 
-  await sql`UPDATE users SET points = ${newPoints} WHERE id = ${user.id}`;
+  await sql`UPDATE users SET stamps = ${newStamps} WHERE id = ${user.id}`;
 
   await sql`
-    INSERT INTO points_history (user_id, points, action, description)
-    VALUES (${user.id}, ${points}, 'admin_adjust', ${reason})
+    INSERT INTO stamps_history (user_id, stamps, action, description)
+    VALUES (${user.id}, ${stamps}, 'admin_adjust', ${reason})
   `;
 
-  return NextResponse.json({ success: true, newPoints, email });
+  return NextResponse.json({ success: true, newStamps, email });
 }

@@ -11,7 +11,7 @@ export async function GET() {
   const sql = getDb();
   const codes = await sql`
     SELECT
-      q.id, q.code, q.spend_amount, q.points_value,
+      q.id, q.code, q.spend_amount, q.includes_burger, q.stamp_value,
       q.claimed_at, q.created_at,
       u.email AS claimed_by_email
     FROM qr_codes q

@@ -7,17 +7,23 @@ import { use } from "react";
 
 type Params = { code: string };
 
+interface ClaimResult {
+  success?: boolean;
+  error?: string;
+  stampEarned?: boolean;
+  newStamps?: number;
+  stampsInCycle?: number;
+  spendAmount?: number;
+  freeBurgerCode?: string | null;
+}
+
+const STAMPS_PER_REWARD = 8;
+
 export default function ClaimPage({ params }: { params: Promise<Params> }) {
   const { code } = use(params);
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<{
-    success?: boolean;
-    error?: string;
-    pointsEarned?: number;
-    newTotal?: number;
-    spendAmount?: number;
-  } | null>(null);
+  const [result, setResult] = useState<ClaimResult | null>(null);
 
   const handleClaim = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,10 +62,10 @@ export default function ClaimPage({ params }: { params: Promise<Params> }) {
             className="text-2xl text-[#111111]"
             style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.08em" }}
           >
-            Claim Your Points
+            Claim Your Stamp
           </p>
           <p className="text-[#333333] text-xs font-semibold mt-1 tracking-wide">
-            Every £1 = 1 point · 50 points = £5 off
+            Buy 7 Burgers, Get the 8th Free
           </p>
         </div>
 
@@ -67,7 +73,7 @@ export default function ClaimPage({ params }: { params: Promise<Params> }) {
           {!result ? (
             <>
               <p className="text-[#555555] text-sm mb-5 text-center">
-                Enter your email to claim your points from this receipt.
+                Enter your email to claim your loyalty stamp from this receipt.
               </p>
               <form onSubmit={handleClaim} className="space-y-3">
                 <input
@@ -86,7 +92,7 @@ export default function ClaimPage({ params }: { params: Promise<Params> }) {
                   className="w-full btn-primary py-4 text-xl disabled:opacity-60"
                   style={{ fontFamily: "'Bebas Neue', sans-serif" }}
                 >
-                  {loading ? "Claiming..." : "Claim Points"}
+                  {loading ? "Claiming..." : "Claim Stamp"}
                 </button>
               </form>
               <p className="text-xs text-gray-400 text-center mt-4">
@@ -95,43 +101,90 @@ export default function ClaimPage({ params }: { params: Promise<Params> }) {
             </>
           ) : result.success ? (
             <div className="text-center">
-              <div className="text-6xl mb-4">🎉</div>
-              <p
-                className="text-3xl text-[#111111] mb-1"
-                style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}
-              >
-                Points Claimed!
-              </p>
-              <div className="bg-[#F5F5F0] rounded p-4 my-5 border border-gray-200">
-                <p className="text-xs text-gray-500 mb-1 uppercase tracking-widest font-semibold">
-                  Points earned
+              {/* Free burger earned! */}
+              {result.freeBurgerCode ? (
+                <>
+                  <div className="text-5xl mb-3">🎉</div>
+                  <p
+                    className="text-3xl text-[#111111] mb-1"
+                    style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}
+                  >
+                    Free Burger Earned!
+                  </p>
+                  <p className="text-gray-500 text-sm mb-4">
+                    You&apos;ve collected all 8 stamps — enjoy your free Single Patty!
+                  </p>
+                  <div className="bg-[#FFD700] rounded-lg p-4 mb-4">
+                    <p className="text-xs font-bold text-[#111111] uppercase tracking-widest mb-1">
+                      Your Free Burger Code
+                    </p>
+                    <p
+                      className="text-3xl text-[#111111]"
+                      style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.1em" }}
+                    >
+                      {result.freeBurgerCode}
+                    </p>
+                    <p className="text-xs text-[#333333] mt-1 font-medium">
+                      Show at the drive-thru window
+                    </p>
+                  </div>
+                </>
+              ) : result.stampEarned ? (
+                <>
+                  <div className="text-6xl mb-4">🍔</div>
+                  <p
+                    className="text-3xl text-[#111111] mb-1"
+                    style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}
+                  >
+                    Stamp Added!
+                  </p>
+                </>
+              ) : (
+                <>
+                  <div className="text-5xl mb-4">✅</div>
+                  <p
+                    className="text-3xl text-[#111111] mb-1"
+                    style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}
+                  >
+                    Order Recorded
+                  </p>
+                  <p className="text-gray-500 text-sm mb-4">
+                    No stamp this time — stamps are only awarded for burger orders.
+                  </p>
+                </>
+              )}
+
+              {/* Stamp progress */}
+              <div className="bg-[#111111] rounded-lg p-4 mt-4">
+                <p className="text-gray-400 text-xs mb-3 uppercase tracking-[0.2em] font-semibold">
+                  Your Stamp Card
                 </p>
-                <p
-                  className="text-5xl text-[#FFD700]"
-                  style={{ fontFamily: "'Bebas Neue', sans-serif" }}
-                >
-                  +{result.pointsEarned}
-                </p>
-                <p className="text-sm text-gray-500 mt-2">
-                  From £{parseFloat(String(result.spendAmount)).toFixed(2)} spend
+                <div className="grid grid-cols-8 gap-1 mb-3">
+                  {Array.from({ length: STAMPS_PER_REWARD }).map((_, i) => {
+                    const stampsInCycle = (result.newStamps ?? 0) % STAMPS_PER_REWARD;
+                    const filled = i < stampsInCycle;
+                    return (
+                      <div
+                        key={i}
+                        className={`aspect-square rounded flex items-center justify-center text-xs ${
+                          filled ? "bg-[#FFD700]" : "bg-gray-800 border border-gray-700"
+                        }`}
+                      >
+                        {filled ? "🍔" : ""}
+                      </div>
+                    );
+                  })}
+                </div>
+                <p className="text-gray-400 text-xs">
+                  {(result.newStamps ?? 0) % STAMPS_PER_REWARD} / 8 stamps this cycle
                 </p>
               </div>
-              <div className="bg-[#111111] rounded p-4 my-3">
-                <p className="text-gray-400 text-xs mb-1 uppercase tracking-[0.2em] font-semibold">
-                  Total Points Balance
-                </p>
-                <p
-                  className="text-4xl text-[#FFD700]"
-                  style={{ fontFamily: "'Bebas Neue', sans-serif" }}
-                >
-                  {result.newTotal}
-                </p>
-              </div>
+
               <Link
                 href="/loyalty"
                 className="block mt-5 text-[#111111] font-bold text-sm underline underline-offset-4"
               >
-                View your rewards →
+                View your loyalty card →
               </Link>
             </div>
           ) : (
@@ -159,7 +212,7 @@ export default function ClaimPage({ params }: { params: Promise<Params> }) {
                 href="/loyalty"
                 className="block mt-4 text-[#111111] font-bold text-sm underline underline-offset-4"
               >
-                View my rewards
+                View my loyalty card
               </Link>
             </div>
           )}

@@ -209,22 +209,36 @@ export default function HomePage() {
       {/* ── Loyalty Teaser ── */}
       <section className="bg-[#111111] py-20 px-4">
         <div className="max-w-2xl mx-auto text-center">
-          <div className="text-[#FFD700] text-5xl mb-5">★</div>
+          {/* Stamp card preview */}
+          <div className="flex justify-center gap-2 mb-6">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div
+                key={i}
+                className={`w-9 h-9 rounded-lg flex items-center justify-center text-base ${
+                  i < 5
+                    ? "bg-[#FFD700]"
+                    : "bg-gray-800 border border-gray-700"
+                }`}
+              >
+                {i < 5 ? "🍔" : ""}
+              </div>
+            ))}
+          </div>
+
           <h2
             className="text-5xl md:text-6xl text-white mb-4"
             style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}
           >
-            Loyalty Rewards
+            Every 8th Burger Free
           </h2>
           <p className="text-gray-400 text-lg mb-2">
-            Earn rewards every visit.{" "}
-            <strong className="text-[#FFD700]">£5 off every £50 spent.</strong>
+            Order a burger · Scan your receipt · Collect stamps
           </p>
           <p className="text-gray-600 mb-8 text-sm tracking-wide">
-            Every £1 = 1 point · 50 points = £5 reward · No app needed
+            8 stamps = free Single Patty (£4 value) · No app needed
           </p>
           <Link href="/loyalty" className="btn-primary text-lg px-10 py-4">
-            Join the Loyalty Program
+            Join Our Loyalty Program
           </Link>
         </div>
       </section>

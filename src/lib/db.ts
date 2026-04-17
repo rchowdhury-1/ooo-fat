@@ -16,17 +16,16 @@ export async function initDb() {
       name TEXT,
       "emailVerified" TIMESTAMPTZ,
       image TEXT,
-      points INTEGER DEFAULT 0,
+      stamps INTEGER DEFAULT 0,
       total_spent NUMERIC(10,2) DEFAULT 0,
       is_admin BOOLEAN DEFAULT false,
       created_at TIMESTAMPTZ DEFAULT NOW()
     )
   `;
 
-  // Add columns to existing tables if they were created without them
   await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "emailVerified" TIMESTAMPTZ`;
   await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS image TEXT`;
-  await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS points INTEGER DEFAULT 0`;
+  await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS stamps INTEGER DEFAULT 0`;
   await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS total_spent NUMERIC(10,2) DEFAULT 0`;
   await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false`;
 
@@ -35,7 +34,8 @@ export async function initDb() {
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
       code TEXT UNIQUE NOT NULL,
       spend_amount NUMERIC(10,2) NOT NULL,
-      points_value INTEGER NOT NULL,
+      includes_burger BOOLEAN DEFAULT false,
+      stamp_value INTEGER DEFAULT 0,
       claimed_by UUID REFERENCES users(id),
       claimed_at TIMESTAMPTZ,
       created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -43,11 +43,14 @@ export async function initDb() {
     )
   `;
 
+  await sql`ALTER TABLE qr_codes ADD COLUMN IF NOT EXISTS includes_burger BOOLEAN DEFAULT false`;
+  await sql`ALTER TABLE qr_codes ADD COLUMN IF NOT EXISTS stamp_value INTEGER DEFAULT 0`;
+
   await sql`
-    CREATE TABLE IF NOT EXISTS points_history (
+    CREATE TABLE IF NOT EXISTS stamps_history (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
       user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-      points INTEGER NOT NULL,
+      stamps INTEGER NOT NULL,
       action TEXT NOT NULL,
       description TEXT,
       created_at TIMESTAMPTZ DEFAULT NOW()
@@ -59,13 +62,14 @@ export async function initDb() {
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
       user_id UUID REFERENCES users(id) ON DELETE CASCADE,
       discount_code TEXT UNIQUE NOT NULL,
-      points_used INTEGER NOT NULL,
+      stamps_used INTEGER NOT NULL DEFAULT 8,
       redeemed BOOLEAN DEFAULT false,
       created_at TIMESTAMPTZ DEFAULT NOW()
     )
   `;
 
-  // NextAuth adapter tables
+  await sql`ALTER TABLE rewards ADD COLUMN IF NOT EXISTS stamps_used INTEGER DEFAULT 8`;
+
   await sql`
     CREATE TABLE IF NOT EXISTS accounts (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

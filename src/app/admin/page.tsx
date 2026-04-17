@@ -6,17 +6,18 @@ import Link from "next/link";
 
 interface Stats {
   totalCustomers: number;
-  totalPointsIssued: number;
+  totalStampsIssued: number;
   totalRewardsRedeemed: number;
   totalQrCodes: number;
   claimedQrCodes: number;
+  burgerStampsAwarded: number;
 }
 
 interface Customer {
   id: string;
   email: string;
   name: string | null;
-  points: number;
+  stamps: number;
   total_spent: number;
   created_at: string;
 }
@@ -25,7 +26,8 @@ interface QrCode {
   id: string;
   code: string;
   spend_amount: number;
-  points_value: number;
+  includes_burger: boolean;
+  stamp_value: number;
   claimed_at: string | null;
   created_at: string;
   claimed_by_email: string | null;
@@ -35,7 +37,8 @@ interface GeneratedQr {
   code: string;
   claimUrl: string;
   qrDataUrl: string;
-  pointsValue: number;
+  stampValue: number;
+  includesBurger: boolean;
   spendAmount: number;
 }
 
@@ -51,10 +54,11 @@ export default function AdminPage() {
   const [customerSearch, setCustomerSearch] = useState("");
   const [qrCodes, setQrCodes] = useState<QrCode[]>([]);
   const [spendAmount, setSpendAmount] = useState("");
+  const [includesBurger, setIncludesBurger] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [generatedQr, setGeneratedQr] = useState<GeneratedQr | null>(null);
   const [adjustEmail, setAdjustEmail] = useState("");
-  const [adjustPoints, setAdjustPoints] = useState("");
+  const [adjustStamps, setAdjustStamps] = useState("");
   const [adjustReason, setAdjustReason] = useState("");
   const [adjustResult, setAdjustResult] = useState<string | null>(null);
   const [adjusting, setAdjusting] = useState(false);
@@ -67,7 +71,9 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (isAdmin && tab === "customers") {
-      const url = customerSearch ? `/api/admin/customers?search=${encodeURIComponent(customerSearch)}` : "/api/admin/customers";
+      const url = customerSearch
+        ? `/api/admin/customers?search=${encodeURIComponent(customerSearch)}`
+        : "/api/admin/customers";
       fetch(url).then((r) => r.json()).then(setCustomers);
     }
     if (isAdmin && tab === "qrcodes") {
@@ -82,12 +88,10 @@ export default function AdminPage() {
     const res = await fetch("/api/qr/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ spendAmount }),
+      body: JSON.stringify({ spendAmount, includesBurger }),
     });
     const data = await res.json();
-    if (data.qrDataUrl) {
-      setGeneratedQr(data);
-    }
+    if (data.qrDataUrl) setGeneratedQr(data);
     setGenerating(false);
   };
 
@@ -100,17 +104,21 @@ export default function AdminPage() {
     a.click();
   };
 
-  const adjustPointsSubmit = async (e: React.FormEvent) => {
+  const adjustStampsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setAdjusting(true);
     setAdjustResult(null);
     const res = await fetch("/api/admin/adjust-points", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: adjustEmail, points: parseInt(adjustPoints), reason: adjustReason }),
+      body: JSON.stringify({ email: adjustEmail, stamps: parseInt(adjustStamps), reason: adjustReason }),
     });
     const data = await res.json();
-    setAdjustResult(data.success ? `Done. ${adjustEmail} now has ${data.newPoints} points.` : data.error);
+    setAdjustResult(
+      data.success
+        ? `Done. ${adjustEmail} now has ${data.newStamps} stamps.`
+        : data.error
+    );
     setAdjusting(false);
   };
 
@@ -125,13 +133,24 @@ export default function AdminPage() {
   if (!session) {
     return (
       <div className="min-h-screen bg-[#111111] flex flex-col items-center justify-center px-4">
-        <span className="text-4xl text-[#FFD700] mb-6" style={{ fontFamily: "var(--font-permanent-marker), cursive" }}>Ooo..FAT! Admin</span>
+        <span
+          className="text-4xl text-[#FFD700] mb-6"
+          style={{ fontFamily: "var(--font-permanent-marker), cursive" }}
+        >
+          Ooo..FAT! Admin
+        </span>
         <div className="bg-white rounded-xl p-8 max-w-sm w-full text-center shadow-2xl">
           <p className="text-[#333333] mb-5">Sign in with your admin email to continue.</p>
-          <button onClick={() => signIn()} className="btn-primary w-full py-3 text-base" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
+          <button
+            onClick={() => signIn()}
+            className="btn-primary w-full py-3 text-base"
+            style={{ fontFamily: "'Bebas Neue', sans-serif" }}
+          >
             Sign In
           </button>
-          <Link href="/" className="block mt-4 text-sm text-gray-400 hover:text-gray-600">← Back to site</Link>
+          <Link href="/" className="block mt-4 text-sm text-gray-400 hover:text-gray-600">
+            ← Back to site
+          </Link>
         </div>
       </div>
     );
@@ -153,16 +172,19 @@ export default function AdminPage() {
     { id: "generate", label: "Generate QR", emoji: "🔖" },
     { id: "customers", label: "Customers", emoji: "👥" },
     { id: "qrcodes", label: "QR Codes", emoji: "🗃" },
-    { id: "adjust", label: "Adjust Points", emoji: "⚙️" },
+    { id: "adjust", label: "Adjust Stamps", emoji: "⚙️" },
   ];
 
   return (
     <div className="min-h-screen bg-[#F5F5F0]">
-      {/* Admin Header */}
       <header className="bg-[#111111] sticky top-0 z-10 shadow-lg">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/" className="text-xl text-[#FFD700]" style={{ fontFamily: "var(--font-permanent-marker), cursive" }}>
+            <Link
+              href="/"
+              className="text-xl text-[#FFD700]"
+              style={{ fontFamily: "var(--font-permanent-marker), cursive" }}
+            >
               Ooo..FAT!
             </Link>
             <span className="text-gray-600 text-sm hidden sm:block">/ Admin</span>
@@ -170,7 +192,6 @@ export default function AdminPage() {
           <span className="text-gray-400 text-xs truncate max-w-[180px]">{session.user?.email}</span>
         </div>
 
-        {/* Tabs */}
         <div className="max-w-6xl mx-auto px-4 flex gap-1 overflow-x-auto pb-0 scrollbar-none border-t border-gray-800">
           {tabs.map(({ id, label, emoji }) => (
             <button
@@ -194,24 +215,28 @@ export default function AdminPage() {
         {/* Stats */}
         {tab === "stats" && (
           <div>
-            <h2 className="text-3xl text-[#111111] mb-6" style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}>Overview</h2>
+            <h2
+              className="text-3xl text-[#111111] mb-6"
+              style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}
+            >
+              Overview
+            </h2>
             {stats ? (
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {[
                   { label: "Total Customers", value: stats.totalCustomers, color: "text-blue-600" },
-                  { label: "Points Outstanding", value: stats.totalPointsIssued.toLocaleString(), color: "text-[#FFD700]" },
-                  { label: "Rewards Redeemed", value: stats.totalRewardsRedeemed, color: "text-green-600" },
+                  { label: "Stamps Outstanding", value: stats.totalStampsIssued.toLocaleString(), color: "text-[#FFD700]" },
+                  { label: "Free Burgers Redeemed", value: stats.totalRewardsRedeemed, color: "text-green-600" },
                   { label: "QR Codes Created", value: stats.totalQrCodes, color: "text-purple-600" },
                   { label: "QR Codes Claimed", value: stats.claimedQrCodes, color: "text-orange-500" },
-                  {
-                    label: "Claim Rate",
-                    value: stats.totalQrCodes > 0 ? `${Math.round(stats.claimedQrCodes / stats.totalQrCodes * 100)}%` : "—",
-                    color: "text-gray-700",
-                  },
+                  { label: "Burger Stamps Given", value: stats.burgerStampsAwarded, color: "text-[#FFD700]" },
                 ].map(({ label, value, color }) => (
                   <div key={label} className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
                     <p className="text-gray-500 text-sm mb-1">{label}</p>
-                    <p className={`text-3xl font-bold ${color}`} style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
+                    <p
+                      className={`text-3xl font-bold ${color}`}
+                      style={{ fontFamily: "'Bebas Neue', sans-serif" }}
+                    >
                       {value}
                     </p>
                   </div>
@@ -226,11 +251,21 @@ export default function AdminPage() {
         {/* Generate QR */}
         {tab === "generate" && (
           <div className="max-w-md">
-            <h2 className="text-3xl text-[#111111] mb-2" style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}>Generate Receipt QR</h2>
-            <p className="text-gray-500 text-sm mb-6">Enter the customer&apos;s spend amount to generate a QR code for their receipt.</p>
+            <h2
+              className="text-3xl text-[#111111] mb-2"
+              style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}
+            >
+              Generate Receipt QR
+            </h2>
+            <p className="text-gray-500 text-sm mb-6">
+              Enter spend amount and whether the order included a burger. Burger orders earn 1 stamp.
+              Every 8th burger is free.
+            </p>
             <form onSubmit={generateQr} className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-[#111111] mb-1">Spend Amount (£)</label>
+                <label className="block text-sm font-semibold text-[#111111] mb-1">
+                  Spend Amount (£)
+                </label>
                 <input
                   type="number"
                   min="0.01"
@@ -241,12 +276,44 @@ export default function AdminPage() {
                   onChange={(e) => setSpendAmount(e.target.value)}
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 text-[#111111] focus:outline-none focus:ring-2 focus:ring-[#FFD700] text-base"
                 />
-                {spendAmount && !isNaN(parseFloat(spendAmount)) && (
-                  <p className="text-xs text-gray-400 mt-1">
-                    This will award {Math.floor(parseFloat(spendAmount))} points
-                  </p>
-                )}
               </div>
+
+              {/* Burger toggle */}
+              <div>
+                <label className="block text-sm font-semibold text-[#111111] mb-2">
+                  Order includes a burger?
+                </label>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setIncludesBurger(true)}
+                    className={`flex-1 py-3 rounded-lg border-2 font-bold text-sm uppercase tracking-wide transition-all ${
+                      includesBurger
+                        ? "bg-[#FFD700] border-[#FFD700] text-[#111111]"
+                        : "bg-white border-gray-300 text-gray-500 hover:border-gray-400"
+                    }`}
+                  >
+                    🍔 Yes — adds stamp
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIncludesBurger(false)}
+                    className={`flex-1 py-3 rounded-lg border-2 font-bold text-sm uppercase tracking-wide transition-all ${
+                      !includesBurger
+                        ? "bg-[#111111] border-[#111111] text-white"
+                        : "bg-white border-gray-300 text-gray-500 hover:border-gray-400"
+                    }`}
+                  >
+                    No burger
+                  </button>
+                </div>
+                <p className="text-xs text-gray-400 mt-2">
+                  {includesBurger
+                    ? "This QR will award 1 stamp when scanned."
+                    : "This QR records the visit but awards no stamp."}
+                </p>
+              </div>
+
               <button
                 type="submit"
                 disabled={generating}
@@ -259,8 +326,14 @@ export default function AdminPage() {
 
             {generatedQr && (
               <div className="mt-8 bg-white border border-gray-200 rounded-xl p-6 text-center shadow-sm">
-                <p className="text-sm text-gray-500 mb-1">QR Code — £{parseFloat(String(generatedQr.spendAmount)).toFixed(2)} spend</p>
-                <p className="text-xs text-gray-400 mb-4">{generatedQr.pointsValue} points to be awarded</p>
+                <p className="text-sm text-gray-500 mb-1">
+                  QR Code — £{parseFloat(String(generatedQr.spendAmount)).toFixed(2)} spend
+                </p>
+                <p className="text-xs text-gray-400 mb-4">
+                  {generatedQr.includesBurger
+                    ? "🍔 Awards 1 burger stamp when scanned"
+                    : "No stamp — sides/drinks only"}
+                </p>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={generatedQr.qrDataUrl}
@@ -286,7 +359,10 @@ export default function AdminPage() {
         {tab === "customers" && (
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
-              <h2 className="text-3xl text-[#111111]" style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}>
+              <h2
+                className="text-3xl text-[#111111]"
+                style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}
+              >
                 Customers
               </h2>
               <input
@@ -302,7 +378,7 @@ export default function AdminPage() {
                 <table className="w-full text-sm">
                   <thead className="bg-[#111111] text-gray-300">
                     <tr>
-                      {["Email", "Points", "Total Spent", "Joined"].map((h) => (
+                      {["Email", "Stamps", "Total Spent", "Joined"].map((h) => (
                         <th key={h} className="px-4 py-3 text-left font-semibold tracking-wide">{h}</th>
                       ))}
                     </tr>
@@ -313,20 +389,33 @@ export default function AdminPage() {
                         <td colSpan={4} className="px-4 py-8 text-center text-gray-400">No customers found</td>
                       </tr>
                     ) : (
-                      customers.map((c) => (
-                        <tr key={c.id} className="hover:bg-gray-50 transition-colors">
-                          <td className="px-4 py-3 font-medium text-[#111111]">{c.email}</td>
-                          <td className="px-4 py-3">
-                            <span className="font-bold text-[#FFD700]" style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem" }}>
-                              {c.points || 0}
-                            </span>
-                          </td>
-                          <td className="px-4 py-3 text-gray-600">£{parseFloat(String(c.total_spent || 0)).toFixed(2)}</td>
-                          <td className="px-4 py-3 text-gray-400">
-                            {new Date(c.created_at).toLocaleDateString("en-GB")}
-                          </td>
-                        </tr>
-                      ))
+                      customers.map((c) => {
+                        const stampsInCycle = (c.stamps || 0) % 8;
+                        return (
+                          <tr key={c.id} className="hover:bg-gray-50 transition-colors">
+                            <td className="px-4 py-3 font-medium text-[#111111]">{c.email}</td>
+                            <td className="px-4 py-3">
+                              <div className="flex items-center gap-2">
+                                <span
+                                  className="font-bold text-[#FFD700]"
+                                  style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem" }}
+                                >
+                                  {c.stamps || 0}
+                                </span>
+                                <span className="text-xs text-gray-400">
+                                  ({stampsInCycle}/8 this cycle)
+                                </span>
+                              </div>
+                            </td>
+                            <td className="px-4 py-3 text-gray-600">
+                              £{parseFloat(String(c.total_spent || 0)).toFixed(2)}
+                            </td>
+                            <td className="px-4 py-3 text-gray-400">
+                              {new Date(c.created_at).toLocaleDateString("en-GB")}
+                            </td>
+                          </tr>
+                        );
+                      })
                     )}
                   </tbody>
                 </table>
@@ -338,13 +427,18 @@ export default function AdminPage() {
         {/* QR Codes */}
         {tab === "qrcodes" && (
           <div>
-            <h2 className="text-3xl text-[#111111] mb-6" style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}>QR Codes</h2>
+            <h2
+              className="text-3xl text-[#111111] mb-6"
+              style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}
+            >
+              QR Codes
+            </h2>
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead className="bg-[#111111] text-gray-300">
                     <tr>
-                      {["Code", "Spend", "Points", "Status", "Claimed By", "Date"].map((h) => (
+                      {["Code", "Spend", "Burger?", "Status", "Claimed By", "Date"].map((h) => (
                         <th key={h} className="px-4 py-3 text-left font-semibold tracking-wide">{h}</th>
                       ))}
                     </tr>
@@ -358,8 +452,16 @@ export default function AdminPage() {
                       qrCodes.map((q) => (
                         <tr key={q.id} className="hover:bg-gray-50 transition-colors">
                           <td className="px-4 py-3 font-mono text-xs text-gray-500">{q.code.slice(0, 12)}...</td>
-                          <td className="px-4 py-3 font-semibold text-[#111111]">£{parseFloat(String(q.spend_amount)).toFixed(2)}</td>
-                          <td className="px-4 py-3 text-gray-600">{q.points_value} pts</td>
+                          <td className="px-4 py-3 font-semibold text-[#111111]">
+                            £{parseFloat(String(q.spend_amount)).toFixed(2)}
+                          </td>
+                          <td className="px-4 py-3">
+                            {q.includes_burger ? (
+                              <span className="text-base" title="Burger stamp">🍔</span>
+                            ) : (
+                              <span className="text-gray-400 text-xs">—</span>
+                            )}
+                          </td>
                           <td className="px-4 py-3">
                             <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
                               q.claimed_at ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"
@@ -381,12 +483,19 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* Adjust Points */}
+        {/* Adjust Stamps */}
         {tab === "adjust" && (
           <div className="max-w-md">
-            <h2 className="text-3xl text-[#111111] mb-2" style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}>Adjust Points</h2>
-            <p className="text-gray-500 text-sm mb-6">Manually add or remove points from a customer account. Use negative numbers to deduct.</p>
-            <form onSubmit={adjustPointsSubmit} className="space-y-4">
+            <h2
+              className="text-3xl text-[#111111] mb-2"
+              style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}
+            >
+              Adjust Stamps
+            </h2>
+            <p className="text-gray-500 text-sm mb-6">
+              Manually add or remove stamps from a customer account. Use negative numbers to deduct.
+            </p>
+            <form onSubmit={adjustStampsSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-[#111111] mb-1">Customer Email</label>
                 <input
@@ -399,13 +508,13 @@ export default function AdminPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-[#111111] mb-1">Points to Add / Remove</label>
+                <label className="block text-sm font-semibold text-[#111111] mb-1">Stamps to Add / Remove</label>
                 <input
                   type="number"
                   required
-                  placeholder="e.g. 10 or -5"
-                  value={adjustPoints}
-                  onChange={(e) => setAdjustPoints(e.target.value)}
+                  placeholder="e.g. 1 or -1"
+                  value={adjustStamps}
+                  onChange={(e) => setAdjustStamps(e.target.value)}
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#FFD700] text-base"
                 />
               </div>
@@ -414,7 +523,7 @@ export default function AdminPage() {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Goodwill gesture, Error correction"
+                  placeholder="e.g. Goodwill, Error correction"
                   value={adjustReason}
                   onChange={(e) => setAdjustReason(e.target.value)}
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#FFD700] text-base"
@@ -432,7 +541,9 @@ export default function AdminPage() {
 
             {adjustResult && (
               <div className={`mt-4 p-4 rounded-lg text-sm ${
-                adjustResult.startsWith("Done") ? "bg-green-50 text-green-700 border border-green-200" : "bg-red-50 text-red-700 border border-red-200"
+                adjustResult.startsWith("Done")
+                  ? "bg-green-50 text-green-700 border border-green-200"
+                  : "bg-red-50 text-red-700 border border-red-200"
               }`}>
                 {adjustResult}
               </div>
