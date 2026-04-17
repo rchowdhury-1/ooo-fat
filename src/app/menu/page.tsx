@@ -5,11 +5,11 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 
 const IMGS = {
-  burger: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&auto=format&fit=crop",
-  chicken: "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=600&auto=format&fit=crop",
-  fries: "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=600&auto=format&fit=crop",
-  drinks: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=600&auto=format&fit=crop",
-  loadedFries: "https://images.unsplash.com/photo-1585109649139-366815a0d713?w=600&auto=format&fit=crop",
+  burger: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400",
+  chicken: "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=400",
+  fries: "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=400",
+  drinks: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400",
+  loadedFries: "https://images.unsplash.com/photo-1585109649139-366815a0d713?w=400",
 };
 
 interface MenuItem {
