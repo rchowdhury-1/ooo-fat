@@ -156,7 +156,7 @@ export default function AdminPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#F5F5F0]">
       {/* Admin Header */}
       <header className="bg-[#111111] sticky top-0 z-10 shadow-lg">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">

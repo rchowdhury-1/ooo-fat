@@ -47,8 +47,8 @@ export default function ClaimPage({ params }: { params: Promise<Params> }) {
         </span>
       </Link>
 
-      <div className="w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden">
-        {/* Header */}
+      <div className="w-full max-w-sm bg-white rounded overflow-hidden shadow-2xl">
+        {/* Header strip */}
         <div className="bg-[#FFD700] px-6 py-5 text-center">
           <p
             className="text-2xl text-[#111111]"
@@ -56,23 +56,25 @@ export default function ClaimPage({ params }: { params: Promise<Params> }) {
           >
             Claim Your Points
           </p>
-          <p className="text-[#111111] text-sm opacity-70 mt-1">Every £1 = 1 point · 50 points = £5 off</p>
+          <p className="text-[#333333] text-xs font-semibold mt-1 tracking-wide">
+            Every £1 = 1 point · 50 points = £5 off
+          </p>
         </div>
 
         <div className="px-6 py-8">
           {!result ? (
             <>
-              <p className="text-[#333333] text-sm mb-5 text-center">
+              <p className="text-[#555555] text-sm mb-5 text-center">
                 Enter your email to claim your points from this receipt.
               </p>
-              <form onSubmit={handleClaim} className="space-y-4">
+              <form onSubmit={handleClaim} className="space-y-3">
                 <input
                   type="email"
                   required
                   placeholder="your@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3.5 text-[#111111] focus:outline-none focus:ring-2 focus:ring-[#FFD700] text-base"
+                  className="w-full border border-gray-300 rounded px-4 py-3.5 text-[#111111] focus:outline-none focus:ring-2 focus:ring-[#FFD700] text-base bg-[#F5F5F0]"
                   autoComplete="email"
                   inputMode="email"
                 />
@@ -98,8 +100,10 @@ export default function ClaimPage({ params }: { params: Promise<Params> }) {
               >
                 Points Claimed!
               </p>
-              <div className="bg-[#FFFBEB] rounded-xl p-4 my-5">
-                <p className="text-sm text-gray-500 mb-1">Points earned</p>
+              <div className="bg-[#F5F5F0] rounded p-4 my-5 border border-gray-200">
+                <p className="text-xs text-gray-500 mb-1 uppercase tracking-widest font-semibold">
+                  Points earned
+                </p>
                 <p
                   className="text-5xl text-[#FFD700]"
                   style={{ fontFamily: "'Bebas Neue', sans-serif" }}
@@ -110,8 +114,10 @@ export default function ClaimPage({ params }: { params: Promise<Params> }) {
                   From £{parseFloat(String(result.spendAmount)).toFixed(2)} spend
                 </p>
               </div>
-              <div className="bg-[#111111] rounded-xl p-4 my-3">
-                <p className="text-gray-400 text-xs mb-1 uppercase tracking-widest">Total Points Balance</p>
+              <div className="bg-[#111111] rounded p-4 my-3">
+                <p className="text-gray-400 text-xs mb-1 uppercase tracking-[0.2em] font-semibold">
+                  Total Points Balance
+                </p>
                 <p
                   className="text-4xl text-[#FFD700]"
                   style={{ fontFamily: "'Bebas Neue', sans-serif" }}
@@ -121,7 +127,7 @@ export default function ClaimPage({ params }: { params: Promise<Params> }) {
               </div>
               <Link
                 href="/loyalty"
-                className="block mt-4 text-[#111111] underline underline-offset-4 text-sm"
+                className="block mt-5 text-[#111111] font-bold text-sm underline underline-offset-4"
               >
                 View your rewards →
               </Link>
@@ -149,7 +155,7 @@ export default function ClaimPage({ params }: { params: Promise<Params> }) {
               )}
               <Link
                 href="/loyalty"
-                className="block mt-4 text-[#111111] underline underline-offset-4 text-sm"
+                className="block mt-4 text-[#111111] font-bold text-sm underline underline-offset-4"
               >
                 View my rewards
               </Link>
