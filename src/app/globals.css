@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-bebas: 'Bebas Neue', sans-serif;
+  --font-inter: 'Inter', sans-serif;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: #333333;
+    background: #ffffff;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.05em;
+  }
+}
+
+@layer components {
+  .logo-circle {
+    position: relative;
+    display: inline-block;
+  }
+
+  .logo-circle::after {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -12px;
+    right: -12px;
+    bottom: -8px;
+    border: 3px solid #FFD700;
+    border-radius: 50%;
+    transform: rotate(-3deg);
+    pointer-events: none;
+  }
+
+  .btn-primary {
+    background: #FFD700;
+    color: #111111;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.1em;
+    font-size: 1.1rem;
+    padding: 0.75rem 2rem;
+    border-radius: 4px;
+    transition: background 0.2s, transform 0.1s;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+  }
+
+  .btn-primary:hover {
+    background: #F5C800;
+    transform: translateY(-1px);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animate-pulse-subtle {
+    animation: logoFade 3s ease-in-out infinite;
+  }
+}
+
+@keyframes logoFade {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
