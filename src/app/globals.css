@@ -1,9 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-bebas: 'Bebas Neue', sans-serif;
+  --font-archivo-black: 'Archivo Black', sans-serif;
   --font-permanent-marker: 'Permanent Marker', cursive;
   --font-inter: 'Inter', sans-serif;
 }
@@ -16,20 +18,20 @@
   body {
     font-family: 'Inter', sans-serif;
     color: #333333;
-    background: #F5F5F0;
+    background: #f5f0e8;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Bebas Neue', sans-serif;
+    font-family: 'Archivo Black', sans-serif;
     letter-spacing: 0.05em;
   }
 }
 
 @layer components {
   .btn-primary {
-    background: #FFD700;
-    color: #111111;
-    font-family: 'Bebas Neue', sans-serif;
+    background: #e6a317;
+    color: #1a1a1a;
+    font-family: 'Archivo Black', sans-serif;
     letter-spacing: 0.1em;
     font-size: 1rem;
     padding: 0.75rem 2rem;
@@ -43,7 +45,7 @@
   }
 
   .btn-primary:hover {
-    background: #F5C800;
+    background: #d4941a;
     transform: translateY(-1px);
   }
 

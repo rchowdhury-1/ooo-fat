@@ -9,16 +9,17 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        yellow: {
-          400: "#FFD700",
-          500: "#F5C800",
+        amber: {
+          400: "#e6a317",
+          500: "#d4941a",
         },
-        dark: "#111111",
-        cream: "#FFFBEB",
+        dark: "#1a1a1a",
+        cream: "#f5f0e8",
         body: "#333333",
+        "warm-red": "#c4362a",
       },
       fontFamily: {
-        heading: ["var(--font-bebas)", "sans-serif"],
+        heading: ["var(--font-archivo-black)", "sans-serif"],
         body: ["var(--font-inter)", "sans-serif"],
       },
       keyframes: {
@@ -26,6 +27,13 @@ const config: Config = {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.7" },
         },
+        "hero-zoom": {
+          "0%": { transform: "scale(1)" },
+          "100%": { transform: "scale(1.05)" },
+        },
+      },
+      animation: {
+        "hero-zoom": "hero-zoom 20s ease-in-out infinite alternate",
       },
     },
   },
