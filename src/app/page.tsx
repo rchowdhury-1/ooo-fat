@@ -113,15 +113,15 @@ export default function HomePage() {
                 No frozen patties. No shortcuts. Just real food, fast, every night from 6PM until
                 2AM. Pull up to the drive-thru window and taste what a smash burger should be.
               </p>
-              <div className="flex flex-row flex-nowrap justify-start items-center gap-6">
+              <div className="flex flex-row flex-nowrap justify-center items-center gap-8 w-full text-center">
                 {[
                   { label: "Angus Beef", icon: "🥩" },
                   { label: "Brioche Bun", icon: "🍔" },
                   { label: "Drive-Thru", icon: "🚗" },
                 ].map(({ label, icon }) => (
-                  <div key={label} className="flex flex-col items-center gap-1.5 shrink-0">
-                    <span className="text-2xl">{icon}</span>
-                    <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#9A9A8A] whitespace-nowrap">
+                  <div key={label} className="flex flex-col items-center justify-center shrink-0" style={{ textAlign: "center" }}>
+                    <span className="text-2xl block">{icon}</span>
+                    <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#9A9A8A] whitespace-nowrap block mt-1.5">
                       {label}
                     </span>
                   </div>
