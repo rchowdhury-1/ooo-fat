@@ -113,15 +113,15 @@ export default function HomePage() {
                 No frozen patties. No shortcuts. Just real food, fast, every night from 6PM until
                 2AM. Pull up to the drive-thru window and taste what a smash burger should be.
               </p>
-              <div className="flex flex-wrap gap-8">
+              <div className="flex flex-row flex-nowrap justify-start items-center gap-6">
                 {[
-                  { label: "Fresh Angus Beef", icon: "🥩" },
+                  { label: "Angus Beef", icon: "🥩" },
                   { label: "Brioche Bun", icon: "🍔" },
-                  { label: "Drive-Thru Only", icon: "🚗" },
+                  { label: "Drive-Thru", icon: "🚗" },
                 ].map(({ label, icon }) => (
-                  <div key={label} className="flex flex-col items-center gap-2">
-                    <span className="text-3xl">{icon}</span>
-                    <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#9A9A8A]">
+                  <div key={label} className="flex flex-col items-center gap-1.5 shrink-0">
+                    <span className="text-2xl">{icon}</span>
+                    <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#9A9A8A] whitespace-nowrap">
                       {label}
                     </span>
                   </div>
@@ -229,14 +229,14 @@ export default function HomePage() {
               title="Ooo..FAT! Location"
             />
           </div>
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-6 text-[#9A9A8A]">
-            <div className="flex items-center gap-2">
-              <span className="text-[#E8B84B] text-xl">📍</span>
-              <span className="font-semibold text-sm md:text-base">878 Kingsbury Rd, Birmingham B24 9PT</span>
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 text-[#9A9A8A]">
+            <div className="flex items-start gap-2">
+              <span className="text-[#E8B84B] text-lg shrink-0 mt-0.5">📍</span>
+              <span className="font-semibold text-sm text-center">878 Kingsbury Rd, Birmingham B24 9PT</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[#E8B84B] text-xl">🕕</span>
-              <span className="font-semibold text-sm md:text-base">Open 7 Days a Week · 6PM – 2AM</span>
+              <span className="text-[#E8B84B] text-lg shrink-0">🕕</span>
+              <span className="font-semibold text-sm">Open 7 Days a Week · 6PM – 2AM</span>
             </div>
           </div>
         </div>
