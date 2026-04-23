@@ -4,13 +4,13 @@ import { useState, useRef, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 
 /* ─────────────────────────────────────────────
-   DATA
+   VISUAL MENU DATA
 ───────────────────────────────────────────── */
 
 const visualItems = [
   {
     name: "Single Smash",
-    subtitle: "Single patty · Brioche · American cheese",
+    subtitle: "Angus beef · American cheese · Brioche",
     image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800",
   },
   {
@@ -25,13 +25,13 @@ const visualItems = [
   },
   {
     name: "Chicken Burger",
-    subtitle: "Crispy chicken · Brioche · Slaw",
-    image: "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=800",
+    subtitle: "Crispy chicken · Lettuce · Mayo · Brioche",
+    image: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=800",
   },
   {
-    name: "Skin On Fries",
-    subtitle: "Fresh cut · Seasoned",
-    image: "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=800",
+    name: "Mix Burger",
+    subtitle: "Beef & chicken · American cheese · Brioche",
+    image: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=800",
   },
   {
     name: "Cheese Fries",
@@ -39,9 +39,14 @@ const visualItems = [
     image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=800",
   },
   {
-    name: "Loaded Fries",
-    subtitle: "Fully loaded · The real deal",
+    name: "Beef Loaded Fries",
+    subtitle: "Cheese sauce · Hannibal sauce · Jalapeños",
     image: "https://images.unsplash.com/photo-1585109649139-366815a0d713?w=800",
+  },
+  {
+    name: "Chicken Loaded Fries",
+    subtitle: "Chicken · Cheese sauce · Jalapeños",
+    image: "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=800",
   },
   {
     name: "Chicken Popcorn",
@@ -50,76 +55,111 @@ const visualItems = [
   },
   {
     name: "Chicken Tenders",
-    subtitle: "3 for £4.50 · Golden & crispy",
-    image: "https://images.unsplash.com/photo-1587814213670-c7c7e2a1ad8b?w=800",
+    subtitle: "3 golden crispy tenders",
+    image: "https://images.unsplash.com/photo-1562967914-608f82629710?w=800",
   },
   {
     name: "Soft Drink",
-    subtitle: "Ice cold · Various flavours",
+    subtitle: "Pepsi · Rio · Tango · Mango · Guava · Irn Bru",
     image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=800",
   },
 ];
 
+/* ─────────────────────────────────────────────
+   PRICING MENU DATA
+───────────────────────────────────────────── */
+
 const pricingMenu = [
   {
-    section: "🍔 Smash Burgers",
+    section: "🍔 Smash Burger",
+    note: "Smashed Angus beef with American cheese, lettuce, mayonnaise, gherkins and sauce of choice in a brioche bun",
     items: [
-      { name: "Single Smash", price: "£4.00", desc: "Single smashed patty, American cheese, lettuce, gherkins" },
-      { name: "Double Smash", price: "£6.00", desc: "Two smashed patties, double cheese, all the good stuff" },
-      { name: "Triple Smash", price: "£8.00", desc: "Triple patty, triple cheese — legend only" },
+      { name: "Single Patty", price: "£5.00", desc: "" },
+      { name: "Double Patty", price: "£7.00", desc: "" },
+      { name: "Triple Patty", price: "£9.00", desc: "" },
     ],
   },
   {
-    section: "🍗 Chicken",
+    section: "🍗 Chicken Burger",
+    note: "Chicken with lettuce and mayonnaise in a brioche bun",
     items: [
-      { name: "Chicken Burger", price: "£5.00", desc: "Crispy chicken fillet, brioche, slaw, sauce" },
+      { name: "Single", price: "£5.00", desc: "" },
+      { name: "Double", price: "£7.00", desc: "" },
     ],
   },
   {
-    section: "🍟 Sides",
+    section: "🔀 Mix Burger",
+    note: "American cheese, lettuce, mayonnaise, gherkins and sauce of choice",
     items: [
-      { name: "Skin On Fries", price: "£1.50", desc: "Fresh cut skin-on fries, seasoned" },
-      { name: "Cheese Fries", price: "£3.00", desc: "Skin on fries with cheese sauce" },
-      { name: "Chicken Popcorn", price: "£3.00", desc: "Crispy chicken bites" },
-      { name: "Chilli Cheese Bites", price: "£3.00", desc: "Jalapeño and cheese bites" },
-      { name: "Chicken Tenders", price: "£4.50", desc: "3 golden crispy tenders" },
-      { name: "Loaded Fries", price: "£5.00", desc: "Fully loaded with toppings" },
+      { name: "Single Patty", price: "£7.00", desc: "" },
+      { name: "Double Patty", price: "£9.00", desc: "" },
+      { name: "Triple Patty", price: "£11.00", desc: "" },
     ],
   },
   {
     section: "🧀 Extra Toppings",
+    note: "",
     items: [
-      { name: "Caramelised Onions", price: "+£1.00", desc: "" },
-      { name: "Jalapeños", price: "+£1.00", desc: "" },
-      { name: "Chilli Cheese Bites", price: "+£2.00", desc: "" },
-    ],
-  },
-  {
-    section: "🥫 Sauces",
-    items: [
-      { name: "Classic / Ketchup / Mayo", price: "Free", desc: "" },
-      { name: "Spicy Algerian", price: "Free", desc: "" },
-      { name: "BBQ", price: "Free", desc: "" },
+      { name: "Onions", price: "+£1.00", desc: "" },
+      { name: "Extra Chicken", price: "+£2.00", desc: "" },
+      { name: "Extra Beef", price: "+£2.00", desc: "" },
+      { name: "Cheese Bites", price: "+£2.00", desc: "" },
+      { name: "Jalapeños", price: "Free", desc: "" },
     ],
   },
   {
     section: "🍱 Make It A Meal",
+    note: "",
     items: [
-      { name: "Add Fries, Dip & Soft Drink", price: "+£2.00", desc: "Add to any burger" },
+      { name: "Skin On Fries & Drink", price: "+£2.50", desc: "" },
+      { name: "Cheese Fries & Drink", price: "+£3.50", desc: "" },
+      { name: "Beef Loaded Fries & Drink", price: "+£5.00", desc: "" },
+      { name: "Chicken Loaded Fries & Drink", price: "+£5.00", desc: "" },
+      { name: "Mix Loaded Fries & Drink", price: "+£7.00", desc: "" },
+      { name: "Strip Loaded Fries & Drink", price: "+£8.50", desc: "" },
+      { name: "Mix Loaded Fries with Strips & Drink", price: "+£10.50", desc: "" },
     ],
   },
   {
-    section: "🥛 Dips",
+    section: "🍟 Sides",
+    note: "",
     items: [
-      { name: "Sweet Chilli / Hot Chilli / Ketchup", price: "£0.30", desc: "" },
-      { name: "Mayo / Spicy Algerian", price: "£0.30", desc: "" },
+      { name: "Chicken Popcorn", price: "£3.50", desc: "" },
+      { name: "Cheese Bites (5pcs)", price: "£3.50", desc: "" },
+      { name: "Chicken Tenders (3pcs)", price: "£5.00", desc: "" },
     ],
   },
   {
-    section: "🥤 Beverages",
+    section: "🍟 Fries",
+    note: "All loaded fries come with cheese sauce, Hannibal sauce and jalapeños",
+    items: [
+      { name: "Cheese Fries", price: "£3.50", desc: "" },
+      { name: "Chicken Loaded Fries", price: "£5.00", desc: "" },
+      { name: "Beef Loaded Fries", price: "£5.00", desc: "" },
+      { name: "Mix Loaded Fries", price: "£7.00", desc: "" },
+      { name: "Strip Loaded Fries", price: "£8.50", desc: "" },
+      { name: "Mix Loaded Strip Fries", price: "£10.50", desc: "" },
+    ],
+  },
+  {
+    section: "🥫 Dips",
+    note: "",
+    items: [
+      { name: "Algerian · BBQ · Ketchup · Mayo · Hot Chilli · Sweet Chilli", price: "£0.50 each", desc: "" },
+    ],
+  },
+  {
+    section: "🥤 Drinks",
+    note: "",
     items: [
       { name: "Water", price: "£1.20", desc: "" },
-      { name: "Soft Drink", price: "£1.50", desc: "Various flavours" },
+      { name: "Rio", price: "£1.50", desc: "" },
+      { name: "Tango Orange", price: "£1.50", desc: "" },
+      { name: "Mango", price: "£1.50", desc: "" },
+      { name: "Guava", price: "£1.50", desc: "" },
+      { name: "Irn Bru", price: "£1.50", desc: "" },
+      { name: "Pepsi", price: "£1.50", desc: "" },
+      { name: "Pepsi Max", price: "£1.50", desc: "" },
     ],
   },
 ];
@@ -154,18 +194,18 @@ function VisualMenu() {
   }, []);
 
   return (
-    <div className="relative" style={{ height: "calc(100dvh - 64px)" }}>
+    <div className="relative" style={{ height: "calc(100dvh - 112px)" }}>
       {/* Scroll container */}
-      <div ref={containerRef} className="menu-scroll-container" style={{ height: "calc(100dvh - 64px)" }}>
+      <div ref={containerRef} className="menu-scroll-container" style={{ height: "calc(100dvh - 112px)" }}>
         {visualItems.map((item, i) => (
           <div
             key={item.name}
             ref={(el) => { itemRefs.current[i] = el; }}
             className="menu-snap-item relative flex flex-col"
-            style={{ height: "calc(100dvh - 64px)" }}
+            style={{ height: "calc(100dvh - 112px)" }}
           >
             {/* Photo — 75% */}
-            <div className="relative flex-1 overflow-hidden" style={{ flexBasis: "75%" }}>
+            <div className="relative overflow-hidden" style={{ flex: "0 0 75%" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={item.image}
@@ -174,34 +214,34 @@ function VisualMenu() {
                 loading={i === 0 ? "eager" : "lazy"}
               />
               {/* Top vignette */}
-              <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0D0D0D]/60 to-transparent" />
+              <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0D0D0D]/70 to-transparent" />
               {/* Bottom vignette */}
-              <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#0D0D0D] to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#0D0D0D] to-transparent" />
             </div>
 
             {/* Info — 25% */}
             <div
-              className="bg-[#0D0D0D] flex flex-col justify-center px-6 pb-4"
-              style={{ flexBasis: "25%" }}
+              className="bg-[#0D0D0D] flex flex-col justify-center px-6 pb-2"
+              style={{ flex: "0 0 25%" }}
             >
               <h2
                 className="text-[#F5F5F0] leading-tight mb-1"
                 style={{
                   fontFamily: "var(--font-archivo), sans-serif",
-                  fontSize: "clamp(1.8rem, 6vw, 3rem)",
+                  fontSize: "clamp(1.6rem, 5vw, 2.8rem)",
                   letterSpacing: "0.02em",
                 }}
               >
                 {item.name}
               </h2>
-              <p className="text-[#9A9A8A] text-sm md:text-base">{item.subtitle}</p>
+              <p className="text-[#9A9A8A] text-sm leading-snug">{item.subtitle}</p>
             </div>
           </div>
         ))}
       </div>
 
       {/* Scroll position dots */}
-      <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-10">
+      <div className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col gap-1.5 z-10">
         {visualItems.map((_, i) => (
           <button
             key={i}
@@ -211,7 +251,7 @@ function VisualMenu() {
             }}
             className={`rounded-full transition-all duration-300 ${
               i === activeIndex
-                ? "w-2 h-6 bg-[#E8B84B]"
+                ? "w-2 h-5 bg-[#E8B84B]"
                 : "w-1.5 h-1.5 bg-[#9A9A8A]/40 hover:bg-[#9A9A8A]"
             }`}
           />
@@ -235,23 +275,26 @@ function VisualMenu() {
 
 function PricingMenu() {
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8 pb-16">
+    <div className="max-w-2xl mx-auto px-4 py-8 pb-20">
       {pricingMenu.map((section) => (
         <div key={section.section} className="mb-8">
           <h3
-            className="text-[#E8B84B] text-lg font-black uppercase tracking-wide mb-3 pb-2 border-b border-[#E8B84B]/20"
+            className="text-[#E8B84B] text-base font-black uppercase tracking-wide mb-1 pb-2 border-b border-[#E8B84B]/20"
             style={{ fontFamily: "var(--font-archivo), sans-serif" }}
           >
             {section.section}
           </h3>
-          <div className="space-y-1">
+          {section.note && (
+            <p className="text-[#9A9A8A] text-xs mb-3 italic leading-snug">{section.note}</p>
+          )}
+          <div className="space-y-0">
             {section.items.map((item) => (
               <div
                 key={item.name}
                 className="flex items-start justify-between gap-4 py-3 border-b border-[#1F1F1F]"
               >
                 <div className="flex-1 min-w-0">
-                  <p className="text-[#F5F5F0] font-semibold text-base">{item.name}</p>
+                  <p className="text-[#F5F5F0] font-semibold text-base leading-snug">{item.name}</p>
                   {item.desc && (
                     <p className="text-[#9A9A8A] text-sm mt-0.5">{item.desc}</p>
                   )}
@@ -282,10 +325,8 @@ export default function MenuPage() {
     <div className="bg-[#0D0D0D] min-h-[100dvh]">
       <Navbar />
 
-      {/* Tab switcher — sits right below navbar */}
-      <div
-        className="sticky top-16 z-30 bg-[#0D0D0D]/95 backdrop-blur-md border-b border-[#E8B84B]/10"
-      >
+      {/* Tab switcher */}
+      <div className="sticky top-16 z-30 bg-[#0D0D0D]/95 backdrop-blur-md border-b border-[#E8B84B]/10">
         <div className="flex max-w-2xl mx-auto">
           {(["visual", "pricing"] as const).map((tab) => (
             <button

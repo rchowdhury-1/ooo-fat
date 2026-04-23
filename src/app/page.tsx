@@ -5,21 +5,21 @@ import Navbar from "@/components/Navbar";
 const featuredItems = [
   {
     name: "Single Smash",
-    price: "£4",
+    price: "£5",
     image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600",
   },
   {
     name: "Double Smash",
-    price: "£6",
+    price: "£7",
     image: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=600",
   },
   {
     name: "Chicken Burger",
     price: "£5",
-    image: "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=600",
+    image: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=600",
   },
   {
-    name: "Loaded Fries",
+    name: "Beef Loaded Fries",
     price: "£5",
     image: "https://images.unsplash.com/photo-1585109649139-366815a0d713?w=600",
   },
@@ -51,7 +51,7 @@ export default function HomePage() {
           />
 
           <p className="text-[#E8B84B] text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase mb-4">
-            Open Daily 6PM – 2AM&nbsp;&nbsp;·&nbsp;&nbsp;Drive-Thru Only&nbsp;&nbsp;·&nbsp;&nbsp;Birmingham
+            Open 7 Days a Week 6PM – 2AM&nbsp;&nbsp;·&nbsp;&nbsp;Drive-Thru Only&nbsp;&nbsp;·&nbsp;&nbsp;Birmingham
           </p>
 
           <h1
@@ -208,9 +208,6 @@ export default function HomePage() {
       {/* ── Location ── */}
       <section id="location" className="py-20 px-4 bg-[#0D0D0D]">
         <div className="max-w-4xl mx-auto">
-          <p className="text-[#E8B84B] text-xs font-bold tracking-[0.3em] uppercase mb-2 text-center">
-            Come Find Us
-          </p>
           <h2
             className="text-[#F5F5F0] text-center mb-10"
             style={{
@@ -239,7 +236,7 @@ export default function HomePage() {
             </div>
             <div className="flex items-center gap-2">
               <span className="text-[#E8B84B] text-xl">🕕</span>
-              <span className="font-semibold text-sm md:text-base">Open Daily 6PM – 2AM</span>
+              <span className="font-semibold text-sm md:text-base">Open 7 Days a Week · 6PM – 2AM</span>
             </div>
           </div>
         </div>
@@ -264,7 +261,7 @@ export default function HomePage() {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-sm">
             <div>
               <p className="mb-1">Smash Burgers · Birmingham · Drive-Thru</p>
-              <p>Open Daily 6PM – 2AM</p>
+              <p>Open 7 Days a Week · 6PM – 2AM</p>
             </div>
             <p className="text-[#1F1F1F] text-xs">&copy; {new Date().getFullYear()} Ooo..FAT!</p>
           </div>
