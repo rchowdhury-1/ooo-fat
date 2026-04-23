@@ -50,12 +50,16 @@ export async function initDb() {
     CREATE TABLE IF NOT EXISTS stamps_history (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
       user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+      qr_code_id UUID REFERENCES qr_codes(id) ON DELETE SET NULL,
       stamps INTEGER NOT NULL,
       action TEXT NOT NULL,
       description TEXT,
       created_at TIMESTAMPTZ DEFAULT NOW()
     )
   `;
+
+  // Backfill column for existing installations created before this migration
+  await sql`ALTER TABLE stamps_history ADD COLUMN IF NOT EXISTS qr_code_id UUID REFERENCES qr_codes(id) ON DELETE SET NULL`;
 
   await sql`
     CREATE TABLE IF NOT EXISTS rewards (

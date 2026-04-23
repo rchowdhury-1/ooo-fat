@@ -63,8 +63,8 @@ export async function POST(req: NextRequest) {
     : `Order recorded — £${parseFloat(String(qr.spend_amount)).toFixed(2)} (no burger)`;
 
   await sql`
-    INSERT INTO stamps_history (user_id, stamps, action, description)
-    VALUES (${user.id}, ${stampEarned}, 'earn', ${description})
+    INSERT INTO stamps_history (user_id, qr_code_id, stamps, action, description)
+    VALUES (${user.id}, ${qr.id}, ${stampEarned}, 'earn', ${description})
   `;
 
   // Auto-generate free burger reward when a new multiple of 8 is crossed

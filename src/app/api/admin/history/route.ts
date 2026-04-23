@@ -15,9 +15,13 @@ export async function GET(req: NextRequest) {
       sh.action,
       sh.description,
       sh.created_at,
-      u.email
+      sh.qr_code_id,
+      u.email,
+      q.code      AS qr_code,
+      q.spend_amount AS qr_spend
     FROM stamps_history sh
     JOIN users u ON sh.user_id = u.id
+    LEFT JOIN qr_codes q ON sh.qr_code_id = q.id
     ORDER BY sh.created_at DESC
     LIMIT 500
   `;
