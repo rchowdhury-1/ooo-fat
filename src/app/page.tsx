@@ -65,6 +65,16 @@ export default function HomePage() {
             Smashed to Order.
           </h1>
 
+          <p
+            className="text-[#E8B84B] mb-3"
+            style={{
+              fontFamily: "var(--font-permanent-marker), cursive",
+              fontSize: "clamp(1.1rem, 4vw, 2rem)",
+            }}
+          >
+            Smash the beef, turn up the flavour
+          </p>
+
           <p className="text-[#9A9A8A] text-base md:text-xl mb-8 max-w-xs md:max-w-md font-light">
             Angus beef&nbsp;·&nbsp;Brioche bun&nbsp;·&nbsp;No compromises.
           </p>
@@ -263,7 +273,15 @@ export default function HomePage() {
               <p className="mb-1">Smash Burgers · Birmingham · Drive-Thru</p>
               <p>Open 7 Days a Week · 6PM – 2AM</p>
             </div>
-            <p className="text-[#1F1F1F] text-xs">&copy; {new Date().getFullYear()} Ooo..FAT!</p>
+            <div className="text-right">
+              <p
+                className="text-[#E8B84B]/50 text-sm mb-1"
+                style={{ fontFamily: "var(--font-permanent-marker), cursive" }}
+              >
+                Smash the beef, turn up the flavour
+              </p>
+              <p className="text-[#9A9A8A]/30 text-xs">&copy; {new Date().getFullYear()} Ooo..FAT!</p>
+            </div>
           </div>
         </div>
       </footer>
