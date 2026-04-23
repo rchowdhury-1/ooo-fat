@@ -1,20 +1,22 @@
-import { auth } from "@/lib/auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { verifyAdminToken, ADMIN_COOKIE } from "@/lib/adminToken";
 
-export default auth((req) => {
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Protect admin routes — must be logged in and admin
   if (pathname.startsWith("/admin")) {
-    if (!req.auth) {
-      const signInUrl = new URL("/api/auth/signin", req.url);
-      signInUrl.searchParams.set("callbackUrl", pathname);
-      return NextResponse.redirect(signInUrl);
+    // Login page is always accessible
+    if (pathname === "/admin/login") return NextResponse.next();
+
+    const token = req.cookies.get(ADMIN_COOKIE)?.value;
+    if (!token || !(await verifyAdminToken(token))) {
+      const loginUrl = new URL("/admin/login", req.url);
+      return NextResponse.redirect(loginUrl);
     }
   }
 
   return NextResponse.next();
-});
+}
 
 export const config = {
   matcher: ["/admin/:path*"],

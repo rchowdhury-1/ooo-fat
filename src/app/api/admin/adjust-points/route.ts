@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { verifyAdminRequest } from "@/lib/adminToken";
 import { getDb } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
-  const session = await auth();
-  if (!session?.user || !(session.user as { isAdmin?: boolean }).isAdmin) {
+  if (!(await verifyAdminRequest(req))) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 

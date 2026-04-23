@@ -8,16 +8,19 @@ export async function GET(req: NextRequest) {
   }
 
   const sql = getDb();
-  const codes = await sql`
+  const history = await sql`
     SELECT
-      q.id, q.code, q.spend_amount, q.includes_burger, q.stamp_value,
-      q.claimed_at, q.created_at,
-      u.email AS claimed_by_email
-    FROM qr_codes q
-    LEFT JOIN users u ON q.claimed_by = u.id
-    ORDER BY q.created_at DESC
-    LIMIT 200
+      sh.id,
+      sh.stamps,
+      sh.action,
+      sh.description,
+      sh.created_at,
+      u.email
+    FROM stamps_history sh
+    JOIN users u ON sh.user_id = u.id
+    ORDER BY sh.created_at DESC
+    LIMIT 500
   `;
 
-  return NextResponse.json(codes);
+  return NextResponse.json(history);
 }

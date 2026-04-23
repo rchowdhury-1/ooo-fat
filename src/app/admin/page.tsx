@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useSession, signIn } from "next-auth/react";
+import { useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 interface Stats {
@@ -42,44 +42,116 @@ interface GeneratedQr {
   spendAmount: number;
 }
 
-type Tab = "stats" | "generate" | "customers" | "qrcodes" | "adjust";
+interface RewardEntry {
+  id: string;
+  email: string;
+  discount_code: string;
+  stamps_used: number;
+  redeemed: boolean;
+  created_at: string;
+}
+
+interface HistoryEntry {
+  id: string;
+  email: string;
+  stamps: number;
+  action: string;
+  description: string;
+  created_at: string;
+}
+
+type Tab = "stats" | "generate" | "customers" | "qrcodes" | "adjust" | "rewards" | "history";
+
+const ACTION_LABELS: Record<string, string> = {
+  earn: "Stamp Earned",
+  admin_adjust: "Admin Adjust",
+  reward: "Reward Issued",
+  redeem: "Reward Redeemed",
+};
 
 export default function AdminPage() {
-  const { data: session, status } = useSession();
-  const isAdmin = (session?.user as { isAdmin?: boolean })?.isAdmin;
+  const router = useRouter();
+  const [authState, setAuthState] = useState<"loading" | "authed">("loading");
 
   const [tab, setTab] = useState<Tab>("stats");
   const [stats, setStats] = useState<Stats | null>(null);
+  const [statsError, setStatsError] = useState(false);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [customerSearch, setCustomerSearch] = useState("");
   const [qrCodes, setQrCodes] = useState<QrCode[]>([]);
+  const [rewards, setRewards] = useState<RewardEntry[]>([]);
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+
   const [spendAmount, setSpendAmount] = useState("");
   const [includesBurger, setIncludesBurger] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [generatedQr, setGeneratedQr] = useState<GeneratedQr | null>(null);
+
   const [adjustEmail, setAdjustEmail] = useState("");
   const [adjustStamps, setAdjustStamps] = useState("");
   const [adjustReason, setAdjustReason] = useState("");
   const [adjustResult, setAdjustResult] = useState<string | null>(null);
   const [adjusting, setAdjusting] = useState(false);
 
+  // Auth check on mount
   useEffect(() => {
-    if (isAdmin) {
-      fetch("/api/admin/stats").then((r) => r.json()).then(setStats);
+    fetch("/api/admin/auth/verify")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.valid) {
+          setAuthState("authed");
+        } else {
+          router.replace("/admin/login");
+        }
+      })
+      .catch(() => router.replace("/admin/login"));
+  }, [router]);
+
+  // Load stats once authed
+  useEffect(() => {
+    if (authState === "authed") {
+      fetch("/api/admin/stats")
+        .then((r) => { if (!r.ok) throw new Error(`${r.status}`); return r.json(); })
+        .then((data) => { setStats(data); setStatsError(false); })
+        .catch((err) => { console.error("[stats]", err); setStatsError(true); });
     }
-  }, [isAdmin]);
+  }, [authState]);
+
+  // Load tab-specific data
+  const loadCustomers = useCallback(() => {
+    const url = customerSearch
+      ? `/api/admin/customers?search=${encodeURIComponent(customerSearch)}`
+      : "/api/admin/customers";
+    fetch(url)
+      .then((r) => { if (!r.ok) throw new Error(`${r.status}`); return r.json(); })
+      .then(setCustomers)
+      .catch((err) => console.error("[customers]", err));
+  }, [customerSearch]);
 
   useEffect(() => {
-    if (isAdmin && tab === "customers") {
-      const url = customerSearch
-        ? `/api/admin/customers?search=${encodeURIComponent(customerSearch)}`
-        : "/api/admin/customers";
-      fetch(url).then((r) => r.json()).then(setCustomers);
-    }
-    if (isAdmin && tab === "qrcodes") {
-      fetch("/api/qr/list").then((r) => r.json()).then(setQrCodes);
-    }
-  }, [isAdmin, tab, customerSearch]);
+    if (authState !== "authed") return;
+    if (tab === "customers") loadCustomers();
+    if (tab === "qrcodes")
+      fetch("/api/qr/list")
+        .then((r) => { if (!r.ok) throw new Error(`${r.status}`); return r.json(); })
+        .then(setQrCodes)
+        .catch((err) => console.error("[qrcodes]", err));
+    if (tab === "rewards")
+      fetch("/api/admin/rewards")
+        .then((r) => { if (!r.ok) throw new Error(`${r.status}`); return r.json(); })
+        .then(setRewards)
+        .catch((err) => console.error("[rewards]", err));
+    if (tab === "history")
+      fetch("/api/admin/history")
+        .then((r) => { if (!r.ok) throw new Error(`${r.status}`); return r.json(); })
+        .then(setHistory)
+        .catch((err) => console.error("[history]", err));
+  }, [authState, tab, loadCustomers]);
+
+  const logout = async () => {
+    await fetch("/api/admin/auth/logout", { method: "POST" });
+    router.replace("/admin/login");
+  };
 
   const generateQr = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -122,47 +194,23 @@ export default function AdminPage() {
     setAdjusting(false);
   };
 
-  if (status === "loading") {
+  const toggleRedeemed = async (id: string, currentRedeemed: boolean) => {
+    const res = await fetch("/api/admin/rewards", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, redeemed: !currentRedeemed }),
+    });
+    if (res.ok) {
+      setRewards((prev) =>
+        prev.map((r) => (r.id === id ? { ...r, redeemed: !currentRedeemed } : r))
+      );
+    }
+  };
+
+  if (authState === "loading") {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-[#111111] flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FFD700]" />
-      </div>
-    );
-  }
-
-  if (!session) {
-    return (
-      <div className="min-h-screen bg-[#111111] flex flex-col items-center justify-center px-4">
-        <span
-          className="text-4xl text-[#FFD700] mb-6"
-          style={{ fontFamily: "var(--font-permanent-marker), cursive" }}
-        >
-          Ooo..FAT! Admin
-        </span>
-        <div className="bg-white rounded-xl p-8 max-w-sm w-full text-center shadow-2xl">
-          <p className="text-[#333333] mb-5">Sign in with your admin email to continue.</p>
-          <button
-            onClick={() => signIn()}
-            className="btn-primary w-full py-3 text-base"
-            style={{ fontFamily: "'Bebas Neue', sans-serif" }}
-          >
-            Sign In
-          </button>
-          <Link href="/" className="block mt-4 text-sm text-gray-400 hover:text-gray-600">
-            ← Back to site
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  if (!isAdmin) {
-    return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4 text-center">
-        <p className="text-5xl mb-4">🚫</p>
-        <h1 className="text-2xl font-bold text-[#111111] mb-2">Access Denied</h1>
-        <p className="text-gray-500 mb-6">This page is only accessible to admin users.</p>
-        <Link href="/" className="btn-primary">Back to Home</Link>
       </div>
     );
   }
@@ -173,6 +221,8 @@ export default function AdminPage() {
     { id: "customers", label: "Customers", emoji: "👥" },
     { id: "qrcodes", label: "QR Codes", emoji: "🗃" },
     { id: "adjust", label: "Adjust Stamps", emoji: "⚙️" },
+    { id: "rewards", label: "Rewards", emoji: "🎁" },
+    { id: "history", label: "Stamp Log", emoji: "📋" },
   ];
 
   return (
@@ -189,10 +239,15 @@ export default function AdminPage() {
             </Link>
             <span className="text-gray-600 text-sm hidden sm:block">/ Admin</span>
           </div>
-          <span className="text-gray-400 text-xs truncate max-w-[180px]">{session.user?.email}</span>
+          <button
+            onClick={logout}
+            className="text-xs text-gray-500 hover:text-gray-300 font-semibold uppercase tracking-widest transition-colors"
+          >
+            Sign out
+          </button>
         </div>
 
-        <div className="max-w-6xl mx-auto px-4 flex gap-1 overflow-x-auto pb-0 scrollbar-none border-t border-gray-800">
+        <div className="max-w-6xl mx-auto px-4 flex gap-1 overflow-x-auto pb-0 border-t border-gray-800">
           {tabs.map(({ id, label, emoji }) => (
             <button
               key={id}
@@ -212,7 +267,7 @@ export default function AdminPage() {
 
       <main className="max-w-6xl mx-auto px-4 py-8">
 
-        {/* Stats */}
+        {/* ── Stats ── */}
         {tab === "stats" && (
           <div>
             <h2
@@ -221,7 +276,16 @@ export default function AdminPage() {
             >
               Overview
             </h2>
-            {stats ? (
+            {statsError ? (
+              <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-sm text-red-700">
+                <p className="font-semibold mb-1">Could not load stats</p>
+                <p className="text-red-500">
+                  Check the server console for the error. If this is a fresh setup, make sure
+                  your database tables exist by visiting{" "}
+                  <code className="bg-red-100 px-1 rounded font-mono">/api/init</code> once.
+                </p>
+              </div>
+            ) : stats ? (
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {[
                   { label: "Total Customers", value: stats.totalCustomers, color: "text-blue-600" },
@@ -243,12 +307,15 @@ export default function AdminPage() {
                 ))}
               </div>
             ) : (
-              <div className="text-gray-400">Loading...</div>
+              <div className="flex items-center gap-2 text-gray-400">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400" />
+                Loading...
+              </div>
             )}
           </div>
         )}
 
-        {/* Generate QR */}
+        {/* ── Generate QR ── */}
         {tab === "generate" && (
           <div className="max-w-md">
             <h2
@@ -278,7 +345,6 @@ export default function AdminPage() {
                 />
               </div>
 
-              {/* Burger toggle */}
               <div>
                 <label className="block text-sm font-semibold text-[#111111] mb-2">
                   Order includes a burger?
@@ -355,7 +421,7 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* Customers */}
+        {/* ── Customers ── */}
         {tab === "customers" && (
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
@@ -378,7 +444,7 @@ export default function AdminPage() {
                 <table className="w-full text-sm">
                   <thead className="bg-[#111111] text-gray-300">
                     <tr>
-                      {["Email", "Stamps", "Total Spent", "Joined"].map((h) => (
+                      {["Email", "Stamps", "Cycle", "Total Spent", "Joined"].map((h) => (
                         <th key={h} className="px-4 py-3 text-left font-semibold tracking-wide">{h}</th>
                       ))}
                     </tr>
@@ -386,25 +452,42 @@ export default function AdminPage() {
                   <tbody className="divide-y divide-gray-50">
                     {customers.length === 0 ? (
                       <tr>
-                        <td colSpan={4} className="px-4 py-8 text-center text-gray-400">No customers found</td>
+                        <td colSpan={5} className="px-4 py-8 text-center text-gray-400">No customers found</td>
                       </tr>
                     ) : (
                       customers.map((c) => {
                         const stampsInCycle = (c.stamps || 0) % 8;
+                        const tier =
+                          (c.stamps || 0) >= 40
+                            ? { label: "Gold", color: "bg-yellow-100 text-yellow-700" }
+                            : (c.stamps || 0) >= 16
+                            ? { label: "Silver", color: "bg-gray-100 text-gray-600" }
+                            : { label: "Regular", color: "bg-blue-50 text-blue-600" };
                         return (
                           <tr key={c.id} className="hover:bg-gray-50 transition-colors">
-                            <td className="px-4 py-3 font-medium text-[#111111]">{c.email}</td>
+                            <td className="px-4 py-3 font-medium text-[#111111]">
+                              <div>{c.email}</div>
+                              <span className={`text-xs px-1.5 py-0.5 rounded font-semibold ${tier.color}`}>
+                                {tier.label}
+                              </span>
+                            </td>
                             <td className="px-4 py-3">
-                              <div className="flex items-center gap-2">
-                                <span
-                                  className="font-bold text-[#FFD700]"
-                                  style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem" }}
-                                >
-                                  {c.stamps || 0}
-                                </span>
-                                <span className="text-xs text-gray-400">
-                                  ({stampsInCycle}/8 this cycle)
-                                </span>
+                              <span
+                                className="font-bold text-[#FFD700]"
+                                style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem" }}
+                              >
+                                {c.stamps || 0}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3">
+                              <div className="flex items-center gap-1">
+                                {Array.from({ length: 8 }).map((_, i) => (
+                                  <div
+                                    key={i}
+                                    className={`w-3 h-3 rounded-sm ${i < stampsInCycle ? "bg-[#FFD700]" : "bg-gray-200"}`}
+                                  />
+                                ))}
+                                <span className="text-xs text-gray-400 ml-1">{stampsInCycle}/8</span>
                               </div>
                             </td>
                             <td className="px-4 py-3 text-gray-600">
@@ -424,7 +507,7 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* QR Codes */}
+        {/* ── QR Codes ── */}
         {tab === "qrcodes" && (
           <div>
             <h2
@@ -483,7 +566,7 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* Adjust Stamps */}
+        {/* ── Adjust Stamps ── */}
         {tab === "adjust" && (
           <div className="max-w-md">
             <h2
@@ -550,6 +633,160 @@ export default function AdminPage() {
             )}
           </div>
         )}
+
+        {/* ── Rewards ── */}
+        {tab === "rewards" && (
+          <div>
+            <div className="mb-6">
+              <h2
+                className="text-3xl text-[#111111]"
+                style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}
+              >
+                Reward Codes
+              </h2>
+              <p className="text-gray-500 text-sm mt-1">
+                All free burger codes issued to customers. Toggle redeemed status after a customer uses a code at the window.
+              </p>
+            </div>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-[#111111] text-gray-300">
+                    <tr>
+                      {["Customer", "Code", "Stamps Used", "Status", "Issued", "Action"].map((h) => (
+                        <th key={h} className="px-4 py-3 text-left font-semibold tracking-wide">{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-50">
+                    {rewards.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} className="px-4 py-8 text-center text-gray-400">No rewards issued yet</td>
+                      </tr>
+                    ) : (
+                      rewards.map((r) => (
+                        <tr key={r.id} className={`hover:bg-gray-50 transition-colors ${r.redeemed ? "opacity-60" : ""}`}>
+                          <td className="px-4 py-3 text-[#111111] font-medium">{r.email}</td>
+                          <td className="px-4 py-3">
+                            <span
+                              className="font-mono text-sm font-bold text-[#111111] bg-[#F5F5F0] px-2 py-1 rounded"
+                            >
+                              {r.discount_code}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 text-gray-500">{r.stamps_used} stamps</td>
+                          <td className="px-4 py-3">
+                            <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+                              r.redeemed
+                                ? "bg-gray-100 text-gray-500"
+                                : "bg-green-100 text-green-700"
+                            }`}>
+                              {r.redeemed ? "Used" : "Active"}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 text-gray-400 text-xs">
+                            {new Date(r.created_at).toLocaleDateString("en-GB")}
+                          </td>
+                          <td className="px-4 py-3">
+                            <button
+                              onClick={() => toggleRedeemed(r.id, r.redeemed)}
+                              className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors ${
+                                r.redeemed
+                                  ? "bg-green-100 text-green-700 hover:bg-green-200"
+                                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                              }`}
+                            >
+                              {r.redeemed ? "Mark Active" : "Mark Used"}
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── Stamp Log ── */}
+        {tab === "history" && (
+          <div>
+            <div className="mb-6">
+              <h2
+                className="text-3xl text-[#111111]"
+                style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}
+              >
+                Stamp Log
+              </h2>
+              <p className="text-gray-500 text-sm mt-1">
+                Full history of all stamp events — earnings, adjustments, and rewards issued.
+              </p>
+            </div>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-[#111111] text-gray-300">
+                    <tr>
+                      {["Customer", "Event", "Description", "Stamps", "Date"].map((h) => (
+                        <th key={h} className="px-4 py-3 text-left font-semibold tracking-wide">{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-50">
+                    {history.length === 0 ? (
+                      <tr>
+                        <td colSpan={5} className="px-4 py-8 text-center text-gray-400">No stamp history yet</td>
+                      </tr>
+                    ) : (
+                      history.map((h) => (
+                        <tr key={h.id} className="hover:bg-gray-50 transition-colors">
+                          <td className="px-4 py-3 text-[#111111] font-medium">{h.email}</td>
+                          <td className="px-4 py-3">
+                            <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+                              h.action === "earn"
+                                ? "bg-yellow-100 text-yellow-700"
+                                : h.action === "admin_adjust"
+                                ? "bg-blue-100 text-blue-700"
+                                : h.action === "reward"
+                                ? "bg-green-100 text-green-700"
+                                : "bg-purple-100 text-purple-700"
+                            }`}>
+                              {ACTION_LABELS[h.action] ?? h.action}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 text-gray-500 max-w-xs truncate">{h.description}</td>
+                          <td className="px-4 py-3">
+                            <span
+                              className={`font-bold text-base ${
+                                h.stamps > 0
+                                  ? "text-[#FFD700]"
+                                  : h.stamps < 0
+                                  ? "text-green-600"
+                                  : "text-gray-400"
+                              }`}
+                              style={{ fontFamily: "'Bebas Neue', sans-serif" }}
+                            >
+                              {h.stamps > 0 ? `+${h.stamps}` : h.stamps}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 text-gray-400 text-xs whitespace-nowrap">
+                            {new Date(h.created_at).toLocaleDateString("en-GB", {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            })}
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
       </main>
     </div>
   );

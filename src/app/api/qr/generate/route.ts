@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { verifyAdminRequest } from "@/lib/adminToken";
 import { getDb } from "@/lib/db";
 import { v4 as uuidv4 } from "uuid";
 import QRCode from "qrcode";
 
 export async function POST(req: NextRequest) {
-  const session = await auth();
-  if (!session?.user || !(session.user as { isAdmin?: boolean }).isAdmin) {
+  if (!(await verifyAdminRequest(req))) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
@@ -25,14 +24,8 @@ export async function POST(req: NextRequest) {
   const claimUrl = `${baseUrl}/claim/${code}`;
 
   await sql`
-    INSERT INTO qr_codes (code, spend_amount, includes_burger, stamp_value, created_by)
-    VALUES (
-      ${code},
-      ${amount},
-      ${hasBurger},
-      ${stampValue},
-      (SELECT id FROM users WHERE email = ${session.user.email!})
-    )
+    INSERT INTO qr_codes (code, spend_amount, includes_burger, stamp_value)
+    VALUES (${code}, ${amount}, ${hasBurger}, ${stampValue})
   `;
 
   const qrDataUrl = await QRCode.toDataURL(claimUrl, {
