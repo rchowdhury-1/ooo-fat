@@ -1,91 +1,131 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  // Prevent body scroll when menu open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+
+  const links = [
+    { href: "/", label: "Home" },
+    { href: "/menu", label: "Menu" },
+    { href: "/#about", label: "About" },
+    { href: "/#location", label: "Location" },
+  ];
 
   return (
-    <header className="sticky top-0 z-50 bg-[#111111]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="flex items-center h-16">
-          {/* Logo */}
-          <Link href="/" className="shrink-0">
-            <Image
-              src="/images/logo.jpeg"
-              width={60}
-              height={60}
-              alt="Ooo..FAT!"
-              className="rounded-full"
-            />
-          </Link>
+    <>
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled || menuOpen
+            ? "bg-[#0D0D0D]/95 backdrop-blur-md shadow-lg shadow-black/20"
+            : "bg-transparent"
+        }`}
+      >
+        {/* Gold accent line */}
+        <div className="h-px bg-gradient-to-r from-transparent via-[#E8B84B]/40 to-transparent" />
 
-          {/* Desktop centre nav */}
-          <nav className="hidden md:flex items-center gap-10 flex-1 justify-center">
-            <Link href="/menu" className="text-gray-400 hover:text-white text-xs font-bold tracking-[0.2em] uppercase transition-colors">
-              Menu
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2.5 shrink-0">
+              <Image
+                src="/images/logo.jpeg"
+                width={36}
+                height={36}
+                alt="Ooo..FAT!"
+                className="rounded-full ring-1 ring-[#E8B84B]/30"
+              />
+              <span
+                className="text-[#E8B84B] text-xl leading-none"
+                style={{ fontFamily: "var(--font-permanent-marker), cursive" }}
+              >
+                Ooo..FAT!
+              </span>
             </Link>
-            <a href="/#about" className="text-gray-400 hover:text-white text-xs font-bold tracking-[0.2em] uppercase transition-colors">
-              About
-            </a>
-            <a href="/#location" className="text-gray-400 hover:text-white text-xs font-bold tracking-[0.2em] uppercase transition-colors">
-              Find Us
-            </a>
-          </nav>
 
-          {/* Desktop Loyalty CTA */}
-          <Link
-            href="/loyalty"
-            className="hidden md:inline-flex items-center gap-1.5 ml-auto bg-[#FFD700] text-[#111111] px-5 py-2.5 font-black uppercase hover:bg-[#F5C800] transition-colors"
-            style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "0.85rem", letterSpacing: "0.1em" }}
-          >
-            ★ Loyalty
-          </Link>
+            {/* Desktop nav */}
+            <div className="hidden md:flex items-center gap-1">
+              {links.map(({ href, label }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold uppercase tracking-widest transition-all duration-200 ${
+                    pathname === href
+                      ? "text-[#E8B84B]"
+                      : "text-[#9A9A8A] hover:text-[#F5F5F0]"
+                  }`}
+                >
+                  {label}
+                </Link>
+              ))}
+              <Link href="/menu" className="ml-4 btn-primary text-xs px-5 py-2">
+                Order Now
+              </Link>
+            </div>
 
-          {/* Mobile: star + hamburger */}
-          <div className="md:hidden ml-auto flex items-center gap-3">
-            <Link href="/loyalty" className="text-[#FFD700] text-xl font-black leading-none">★</Link>
+            {/* Mobile hamburger */}
             <button
-              onClick={() => setOpen(!open)}
-              className="text-gray-400 hover:text-white p-1 transition-colors"
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="md:hidden flex flex-col justify-center items-center w-11 h-11 gap-1.5 rounded-lg"
               aria-label="Toggle menu"
             >
-              {open ? (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              )}
+              <span className={`block w-5 h-0.5 bg-[#E8B84B] transition-all duration-300 origin-center ${menuOpen ? "rotate-45 translate-y-2" : ""}`} />
+              <span className={`block w-5 h-0.5 bg-[#E8B84B] transition-all duration-300 ${menuOpen ? "opacity-0 scale-x-0" : ""}`} />
+              <span className={`block w-5 h-0.5 bg-[#E8B84B] transition-all duration-300 origin-center ${menuOpen ? "-rotate-45 -translate-y-2" : ""}`} />
             </button>
           </div>
         </div>
-      </div>
+      </nav>
 
-      {/* Mobile dropdown */}
-      {open && (
-        <nav className="md:hidden bg-[#0d0d0d] border-t border-gray-800 px-4 py-2">
-          {[
-            { href: "/menu", label: "Menu" },
-            { href: "/#about", label: "About" },
-            { href: "/#location", label: "Find Us" },
-            { href: "/loyalty", label: "★ Loyalty" },
-          ].map(({ href, label }) => (
+      {/* Mobile menu overlay */}
+      <div
+        className={`fixed inset-0 z-40 md:hidden transition-all duration-300 ${
+          menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+      >
+        <div className="absolute inset-0 bg-[#0D0D0D]/98 backdrop-blur-xl" />
+        <div className="relative flex flex-col items-center justify-center h-full gap-2 px-6">
+          {links.map(({ href, label }) => (
             <Link
               key={href}
               href={href}
-              onClick={() => setOpen(false)}
-              className="block py-3 text-gray-300 hover:text-white text-sm font-bold tracking-[0.15em] uppercase border-b border-gray-800 last:border-0 transition-colors"
+              onClick={() => setMenuOpen(false)}
+              className="w-full text-center py-4 text-2xl font-black uppercase tracking-widest text-[#F5F5F0] hover:text-[#E8B84B] transition-colors duration-200 border-b border-[#E8B84B]/10"
+              style={{ fontFamily: "var(--font-archivo), sans-serif" }}
             >
               {label}
             </Link>
           ))}
-        </nav>
-      )}
-    </header>
+          <Link
+            href="/menu"
+            onClick={() => setMenuOpen(false)}
+            className="btn-primary w-full text-center text-base mt-6"
+          >
+            View Menu
+          </Link>
+        </div>
+      </div>
+    </>
   );
 }

@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { Bebas_Neue, Inter, Permanent_Marker } from "next/font/google";
+import { Archivo_Black, Permanent_Marker, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-import SessionProvider from "@/components/SessionProvider";
 
-const bebasNeue = Bebas_Neue({
+const archivoBlack = Archivo_Black({
   weight: "400",
   subsets: ["latin"],
-  variable: "--font-bebas",
+  variable: "--font-archivo",
   display: "swap",
 });
 
@@ -17,9 +16,9 @@ const permanentMarker = Permanent_Marker({
   display: "swap",
 });
 
-const inter = Inter({
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-jakarta",
   display: "swap",
 });
 
@@ -40,9 +39,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${bebasNeue.variable} ${permanentMarker.variable} ${inter.variable}`}>
+    <html lang="en" className={`${archivoBlack.variable} ${permanentMarker.variable} ${plusJakartaSans.variable}`}>
       <body className="antialiased">
-        <SessionProvider>{children}</SessionProvider>
+        {children}
       </body>
     </html>
   );

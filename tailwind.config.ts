@@ -9,34 +9,22 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        amber: {
-          400: "#e6a317",
-          500: "#d4941a",
-        },
-        dark: "#1a1a1a",
-        cream: "#f5f0e8",
-        body: "#333333",
-        "warm-red": "#c4362a",
+        "fat-black": "#0D0D0D",
+        "fat-dark": "#1A1A1A",
+        "fat-card": "#1F1F1F",
+        "fat-gold": "#E8B84B",
+        "fat-gold-dark": "#C9A235",
+        "fat-cream": "#F5F5F0",
+        "fat-muted": "#9A9A8A",
       },
       fontFamily: {
-        heading: ["var(--font-archivo-black)", "sans-serif"],
-        body: ["var(--font-inter)", "sans-serif"],
-      },
-      keyframes: {
-        pulse: {
-          "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0.7" },
-        },
-        "hero-zoom": {
-          "0%": { transform: "scale(1)" },
-          "100%": { transform: "scale(1.05)" },
-        },
-      },
-      animation: {
-        "hero-zoom": "hero-zoom 20s ease-in-out infinite alternate",
+        jakarta: ["var(--font-jakarta)", "sans-serif"],
+        archivo: ["var(--font-archivo)", "sans-serif"],
+        marker: ["var(--font-permanent-marker)", "cursive"],
       },
     },
   },
   plugins: [],
 };
+
 export default config;

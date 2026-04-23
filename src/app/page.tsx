@@ -5,34 +5,33 @@ import Navbar from "@/components/Navbar";
 const featuredItems = [
   {
     name: "Single Smash",
-    price: "£4.00",
-    image: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400",
+    price: "£4",
+    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600",
   },
   {
     name: "Double Smash",
-    price: "£6.00",
-    image: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400",
+    price: "£6",
+    image: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=600",
   },
   {
     name: "Chicken Burger",
-    price: "£5.00",
-    image: "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=400",
+    price: "£5",
+    image: "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=600",
   },
   {
     name: "Loaded Fries",
-    price: "£5.00",
-    image: "https://images.unsplash.com/photo-1585109649139-366815a0d713?w=400",
+    price: "£5",
+    image: "https://images.unsplash.com/photo-1585109649139-366815a0d713?w=600",
   },
 ];
 
 export default function HomePage() {
   return (
-    <main>
+    <main className="bg-[#0D0D0D]">
       <Navbar />
 
-      {/* ── Hero (dark) ── */}
-      <section className="relative h-screen min-h-[640px] flex items-center justify-center overflow-hidden">
-        {/* Full-bleed food photo with slow zoom */}
+      {/* ── Hero ── */}
+      <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden noise-overlay">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=1600"
@@ -40,156 +39,156 @@ export default function HomePage() {
           aria-hidden="true"
           className="absolute inset-0 w-full h-full object-cover object-center animate-hero-zoom"
         />
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/35 to-black/85" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0D0D0D]/80 via-[#0D0D0D]/30 to-[#0D0D0D]/90" />
 
-        {/* Content */}
-        <div className="relative z-10 flex flex-col items-center text-center px-4">
+        <div className="relative z-10 flex flex-col items-center text-center px-4 pt-16">
           <Image
             src="/images/logo.jpeg"
             width={200}
             height={200}
             alt="Ooo..FAT!"
-            className="rounded-full mb-5 shadow-2xl ring-4 ring-[#e6a317]/30 w-32 h-32 md:w-[180px] md:h-[180px]"
+            className="rounded-full mb-6 shadow-2xl ring-2 ring-[#E8B84B]/30 w-24 h-24 md:w-40 md:h-40"
           />
 
-          <p className="text-[#e6a317] text-[10px] md:text-xs font-bold tracking-[0.25em] md:tracking-[0.35em] uppercase mb-3 leading-relaxed">
-            Open Daily 6PM – 2AM<br className="sm:hidden" />
-            <span className="hidden sm:inline"> · </span>
-            Drive-Thru Only · Birmingham
+          <p className="text-[#E8B84B] text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase mb-4">
+            Open Daily 6PM – 2AM&nbsp;&nbsp;·&nbsp;&nbsp;Drive-Thru Only&nbsp;&nbsp;·&nbsp;&nbsp;Birmingham
           </p>
 
           <h1
-            className="text-white mb-3 leading-none"
+            className="text-[#F5F5F0] mb-4 leading-none"
             style={{
-              fontFamily: "'Archivo Black', sans-serif",
-              fontSize: "clamp(2.8rem, 10vw, 7rem)",
-              letterSpacing: "0.04em",
+              fontFamily: "var(--font-archivo), sans-serif",
+              fontSize: "clamp(2.6rem, 11vw, 7rem)",
+              letterSpacing: "0.03em",
             }}
           >
             Smashed to Order.
           </h1>
 
-          <p className="text-gray-300 text-base md:text-xl mb-7 max-w-xs md:max-w-md font-light">
-            Angus beef · Brioche bun · No compromises.
+          <p className="text-[#9A9A8A] text-base md:text-xl mb-8 max-w-xs md:max-w-md font-light">
+            Angus beef&nbsp;·&nbsp;Brioche bun&nbsp;·&nbsp;No compromises.
           </p>
 
           <div className="flex flex-wrap gap-3 md:gap-4 justify-center">
-            <Link href="/menu" className="btn-primary text-lg px-10 py-4">
+            <Link href="/menu" className="btn-primary text-base px-8 py-4">
               View Menu
             </Link>
-            <Link
-              href="/loyalty"
-              className="text-[#e6a317] border-2 border-[#e6a317] px-10 py-4 text-lg font-black uppercase tracking-widest hover:bg-[#e6a317] hover:text-[#1a1a1a] transition-colors"
-              style={{ fontFamily: "'Archivo Black', sans-serif" }}
-            >
-              ★ Loyalty
+            <Link href="/#about" className="btn-outline text-base px-8 py-4">
+              Our Story
             </Link>
           </div>
         </div>
+
+        {/* Scroll cue */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 animate-bounce">
+          <div className="w-px h-8 bg-gradient-to-b from-[#E8B84B]/60 to-transparent" />
+        </div>
       </section>
 
-      {/* ── About (cream) ── */}
-      <section id="about" className="bg-[#f5f0e8] py-20 px-4">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
-          {/* Text */}
-          <div className="flex-1 text-center md:text-left">
-            <p className="text-[#e6a317] text-xs font-bold tracking-[0.3em] uppercase mb-3">
-              Our Story
-            </p>
-            <h2
-              className="text-5xl md:text-6xl text-[#1a1a1a] mb-6"
-              style={{ fontFamily: "'Archivo Black', sans-serif", letterSpacing: "0.05em" }}
-            >
-              Born in Birmingham
-            </h2>
-            <p className="text-gray-600 text-lg leading-relaxed mb-5">
-              Ooo..FAT! started with one simple obsession — the perfect smash burger. We source
-              fresh Angus beef, smash it thin on a screaming-hot griddle, and stack it on a pillowy
-              brioche bun with American cheese, crisp lettuce, gherkins, and your sauce of choice.
-            </p>
-            <p className="text-gray-600 text-lg leading-relaxed mb-8">
-              No frozen patties. No shortcuts. Just real food, fast, every night from 6PM until 2AM.
-              Pull up to the drive-thru window and taste what a smash burger should be.
-            </p>
-            <div className="flex flex-wrap gap-10">
-              {[
-                { label: "Fresh Angus Beef", icon: "🥩" },
-                { label: "Brioche Bun", icon: "🍔" },
-                { label: "Drive-Thru Only", icon: "🚗" },
-              ].map(({ label, icon }) => (
-                <div key={label} className="flex flex-col items-center gap-2">
-                  <span className="text-3xl">{icon}</span>
-                  <span className="text-xs font-bold uppercase tracking-[0.2em] text-gray-500">
-                    {label}
-                  </span>
-                </div>
-              ))}
+      {/* ── About ── */}
+      <section id="about" className="bg-[#0D0D0D] py-20 px-4">
+        <div className="max-w-6xl mx-auto">
+          <p className="text-[#E8B84B] text-xs font-bold tracking-[0.3em] uppercase mb-3">
+            Our Story
+          </p>
+          <h2
+            className="text-[#F5F5F0] mb-6 leading-tight"
+            style={{
+              fontFamily: "var(--font-archivo), sans-serif",
+              fontSize: "clamp(2rem, 6vw, 4rem)",
+              letterSpacing: "0.03em",
+            }}
+          >
+            Born in Birmingham
+          </h2>
+          <div className="grid md:grid-cols-2 gap-8 items-start">
+            <div>
+              <p className="text-[#9A9A8A] text-base md:text-lg leading-relaxed mb-4">
+                Ooo..FAT! started with one simple obsession — the perfect smash burger. We source
+                fresh Angus beef, smash it thin on a screaming-hot griddle, and stack it on a
+                pillowy brioche bun with American cheese, crisp lettuce, gherkins, and your sauce
+                of choice.
+              </p>
+              <p className="text-[#9A9A8A] text-base md:text-lg leading-relaxed mb-8">
+                No frozen patties. No shortcuts. Just real food, fast, every night from 6PM until
+                2AM. Pull up to the drive-thru window and taste what a smash burger should be.
+              </p>
+              <div className="flex flex-wrap gap-8">
+                {[
+                  { label: "Fresh Angus Beef", icon: "🥩" },
+                  { label: "Brioche Bun", icon: "🍔" },
+                  { label: "Drive-Thru Only", icon: "🚗" },
+                ].map(({ label, icon }) => (
+                  <div key={label} className="flex flex-col items-center gap-2">
+                    <span className="text-3xl">{icon}</span>
+                    <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#9A9A8A]">
+                      {label}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-
-          {/* Photo stack */}
-          <div className="hidden md:flex flex-1 grid grid-cols-2 gap-3">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400"
-              alt="Smash burger"
-              className="rounded w-full h-44 object-cover col-span-2"
-            />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=400"
-              alt="Fries"
-              className="rounded w-full h-32 object-cover"
-            />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="https://images.unsplash.com/photo-1585109649139-366815a0d713?w=400"
-              alt="Loaded fries"
-              className="rounded w-full h-32 object-cover"
-            />
+            <div className="grid grid-cols-2 gap-3">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400"
+                alt="Smash burger"
+                className="rounded-2xl w-full h-40 md:h-48 object-cover col-span-2"
+              />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=400"
+                alt="Fries"
+                className="rounded-2xl w-full h-32 object-cover"
+              />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="https://images.unsplash.com/photo-1585109649139-366815a0d713?w=400"
+                alt="Loaded fries"
+                className="rounded-2xl w-full h-32 object-cover"
+              />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── Featured Items (dark) ── */}
-      <section className="bg-[#1a1a1a] py-20 px-4">
+      {/* ── Featured Items ── */}
+      <section className="bg-[#1A1A1A] py-20 px-4">
         <div className="max-w-7xl mx-auto">
-          <p className="text-[#e6a317] text-xs font-bold tracking-[0.3em] uppercase mb-2">
+          <p className="text-[#E8B84B] text-xs font-bold tracking-[0.3em] uppercase mb-2">
             Our Menu
           </p>
           <h2
-            className="text-5xl md:text-6xl text-white mb-2"
-            style={{ fontFamily: "'Archivo Black', sans-serif", letterSpacing: "0.03em" }}
+            className="text-[#F5F5F0] mb-10"
+            style={{
+              fontFamily: "var(--font-archivo), sans-serif",
+              fontSize: "clamp(2rem, 6vw, 4rem)",
+              letterSpacing: "0.03em",
+            }}
           >
             What We Do Best
           </h2>
-          <p className="text-gray-400 mb-10 text-xs font-bold tracking-[0.25em] uppercase">
-            Premium street food · Birmingham
-          </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             {featuredItems.map((item) => (
               <div
                 key={item.name}
-                className="bg-white rounded-lg overflow-hidden group shadow-sm hover:shadow-md transition-shadow"
+                className="bg-[#1F1F1F] rounded-2xl overflow-hidden group border border-[#E8B84B]/10 hover:border-[#E8B84B]/30 transition-all duration-300"
               >
-                <div className="h-48 overflow-hidden bg-[#1a1a1a] relative">
+                <div className="h-40 md:h-52 overflow-hidden relative">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={item.image}
                     alt={item.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-black/40" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#1F1F1F] via-transparent to-transparent" />
                 </div>
-                <div className="p-4 border-t-2 border-[#e6a317]">
-                  <p className="text-[#1a1a1a] font-bold text-sm md:text-base leading-snug">
-                    {item.name}
-                  </p>
+                <div className="p-4">
+                  <p className="text-[#F5F5F0] font-bold text-sm md:text-base">{item.name}</p>
                   <p
-                    className="text-[#c4362a] text-2xl font-bold mt-1"
-                    style={{ fontFamily: "'Archivo Black', sans-serif" }}
+                    className="text-[#E8B84B] text-xl font-black mt-0.5"
+                    style={{ fontFamily: "var(--font-archivo), sans-serif" }}
                   >
                     {item.price}
                   </p>
@@ -198,66 +197,31 @@ export default function HomePage() {
             ))}
           </div>
 
-          <div className="text-center mt-12">
-            <Link href="/menu" className="btn-primary text-lg px-12 py-4">
+          <div className="text-center mt-10">
+            <Link href="/menu" className="btn-primary text-base px-10 py-4">
               View Full Menu
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ── Loyalty Teaser (cream) ── */}
-      <section className="bg-[#f5f0e8] py-20 px-4">
-        <div className="max-w-2xl mx-auto text-center">
-          <div className="grid grid-cols-4 md:grid-cols-8 gap-2 max-w-[260px] md:max-w-none mx-auto mb-6">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div
-                key={i}
-                className={`w-full aspect-square rounded-lg flex items-center justify-center text-lg md:text-base ${
-                  i < 5
-                    ? "bg-[#e6a317]"
-                    : "bg-[#e0dbd3] border border-[#ccc7be]"
-                }`}
-              >
-                {i < 5 ? "🍔" : ""}
-              </div>
-            ))}
-          </div>
-
-          <h2
-            className="text-5xl md:text-6xl text-[#1a1a1a] mb-4"
-            style={{ fontFamily: "'Archivo Black', sans-serif", letterSpacing: "0.05em" }}
-          >
-            Every 8th Burger Free
-          </h2>
-          <p className="text-gray-600 text-lg mb-2">
-            Order a burger · Scan your receipt · Collect stamps
-          </p>
-          <p className="text-gray-500 mb-8 text-sm tracking-wide">
-            8 stamps = free Single Patty (£4 value) · No app needed
-          </p>
-          <Link href="/loyalty" className="btn-primary text-lg px-10 py-4">
-            Join Our Loyalty Program
-          </Link>
-        </div>
-      </section>
-
-      {/* ── Location (dark) ── */}
-      <section id="location" className="py-20 px-4 bg-[#1a1a1a]">
+      {/* ── Location ── */}
+      <section id="location" className="py-20 px-4 bg-[#0D0D0D]">
         <div className="max-w-4xl mx-auto">
-          <p className="text-[#e6a317] text-xs font-bold tracking-[0.3em] uppercase mb-2 text-center">
+          <p className="text-[#E8B84B] text-xs font-bold tracking-[0.3em] uppercase mb-2 text-center">
             Come Find Us
           </p>
           <h2
-            className="text-5xl md:text-6xl text-white text-center mb-2"
-            style={{ fontFamily: "'Archivo Black', sans-serif", letterSpacing: "0.05em" }}
+            className="text-[#F5F5F0] text-center mb-10"
+            style={{
+              fontFamily: "var(--font-archivo), sans-serif",
+              fontSize: "clamp(2rem, 6vw, 4rem)",
+              letterSpacing: "0.03em",
+            }}
           >
             Find Us
           </h2>
-          <p className="text-center text-gray-400 mb-8 text-xs font-bold tracking-[0.25em] uppercase">
-            Birmingham, UK
-          </p>
-          <div className="rounded-lg overflow-hidden shadow-lg">
+          <div className="rounded-2xl overflow-hidden shadow-2xl shadow-black/50 ring-1 ring-[#E8B84B]/10">
             <iframe
               src="https://maps.google.com/maps?q=878+Kingsbury+Rd,+Birmingham+B24+9PT&output=embed"
               width="100%"
@@ -268,39 +232,33 @@ export default function HomePage() {
               title="Ooo..FAT! Location"
             />
           </div>
-          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-8 text-gray-300">
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-6 text-[#9A9A8A]">
             <div className="flex items-center gap-2">
-              <span className="text-[#e6a317] text-xl">📍</span>
-              <span className="font-semibold">878 Kingsbury Rd, Birmingham B24 9PT</span>
+              <span className="text-[#E8B84B] text-xl">📍</span>
+              <span className="font-semibold text-sm md:text-base">878 Kingsbury Rd, Birmingham B24 9PT</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[#e6a317] text-xl">🕕</span>
-              <span className="font-semibold">Open Daily 6PM – 2AM</span>
+              <span className="text-[#E8B84B] text-xl">🕕</span>
+              <span className="font-semibold text-sm md:text-base">Open Daily 6PM – 2AM</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Footer (dark) ── */}
-      <footer className="bg-[#1a1a1a] text-gray-500 py-12 px-4">
+      {/* ── Footer ── */}
+      <footer className="bg-[#0D0D0D] border-t border-[#E8B84B]/10 text-[#9A9A8A] py-12 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-8 pb-8 border-b border-gray-800">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-8 pb-8 border-b border-[#E8B84B]/10">
             <p
-              className="text-[#e6a317] text-3xl"
+              className="text-[#E8B84B] text-3xl"
               style={{ fontFamily: "var(--font-permanent-marker), cursive" }}
             >
               Ooo..FAT!
             </p>
-            <div className="flex gap-8">
-              <Link href="/menu" className="text-gray-400 hover:text-white transition-colors text-xs font-bold tracking-[0.2em] uppercase">
-                Menu
-              </Link>
-              <Link href="/loyalty" className="text-gray-400 hover:text-white transition-colors text-xs font-bold tracking-[0.2em] uppercase">
-                Loyalty
-              </Link>
-              <a href="/#about" className="text-gray-400 hover:text-white transition-colors text-xs font-bold tracking-[0.2em] uppercase">
-                About
-              </a>
+            <div className="flex gap-6">
+              <Link href="/menu" className="text-[#9A9A8A] hover:text-[#E8B84B] transition-colors text-xs font-bold tracking-[0.2em] uppercase">Menu</Link>
+              <a href="/#about" className="text-[#9A9A8A] hover:text-[#E8B84B] transition-colors text-xs font-bold tracking-[0.2em] uppercase">About</a>
+              <a href="/#location" className="text-[#9A9A8A] hover:text-[#E8B84B] transition-colors text-xs font-bold tracking-[0.2em] uppercase">Location</a>
             </div>
           </div>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-sm">
@@ -308,7 +266,7 @@ export default function HomePage() {
               <p className="mb-1">Smash Burgers · Birmingham · Drive-Thru</p>
               <p>Open Daily 6PM – 2AM</p>
             </div>
-            <p className="text-gray-700">&copy; {new Date().getFullYear()} Ooo..FAT! All rights reserved.</p>
+            <p className="text-[#1F1F1F] text-xs">&copy; {new Date().getFullYear()} Ooo..FAT!</p>
           </div>
         </div>
       </footer>

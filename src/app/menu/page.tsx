@@ -1,405 +1,311 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
+import { useState, useRef, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 
-const IMGS = {
-  burger: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400",
-  chicken: "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=400",
-  fries: "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=400",
-  drinks: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400",
-  loadedFries: "https://images.unsplash.com/photo-1585109649139-366815a0d713?w=400",
-};
+/* ─────────────────────────────────────────────
+   DATA
+───────────────────────────────────────────── */
 
-interface MenuItem {
-  name: string;
-  price: string;
-  image?: string;
-  description?: string;
-}
-
-interface ListItem {
-  name: string;
-  price: string;
-}
-
-interface SaucesAddon {
-  type: "sauces";
-  title: string;
-  subtitle: string;
-  options: string[];
-}
-
-interface ToppingsAddon {
-  type: "toppings";
-  title: string;
-  items: ListItem[];
-}
-
-interface MealDealAddon {
-  type: "mealDeal";
-  title: string;
-  subtitle: string;
-  description: string;
-}
-
-interface ListSection {
-  type: "list";
-  title: string;
-  subtitle?: string;
-  items: ListItem[];
-}
-
-type Addon = SaucesAddon | ToppingsAddon | MealDealAddon | ListSection;
-
-interface MenuSection {
-  id: string;
-  title: string;
-  description?: string;
-  items: MenuItem[];
-  addons?: Addon[];
-}
-
-const menuSections: MenuSection[] = [
+const visualItems = [
   {
-    id: "smash-burgers",
-    title: "Smash Burgers",
-    description:
-      "Smashed Angus beef topped with American cheese, lettuce, gherkins & sauce of your choice in a Brioche Bun",
+    name: "Single Smash",
+    subtitle: "Single patty · Brioche · American cheese",
+    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800",
+  },
+  {
+    name: "Double Smash",
+    subtitle: "Two smashed patties · Double cheese",
+    image: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=800",
+  },
+  {
+    name: "Triple Smash",
+    subtitle: "Triple patty · For the brave",
+    image: "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=800",
+  },
+  {
+    name: "Chicken Burger",
+    subtitle: "Crispy chicken · Brioche · Slaw",
+    image: "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=800",
+  },
+  {
+    name: "Skin On Fries",
+    subtitle: "Fresh cut · Seasoned",
+    image: "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=800",
+  },
+  {
+    name: "Cheese Fries",
+    subtitle: "Skin on fries · Cheese sauce",
+    image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=800",
+  },
+  {
+    name: "Loaded Fries",
+    subtitle: "Fully loaded · The real deal",
+    image: "https://images.unsplash.com/photo-1585109649139-366815a0d713?w=800",
+  },
+  {
+    name: "Chicken Popcorn",
+    subtitle: "Crispy bites · Perfect snack",
+    image: "https://images.unsplash.com/photo-1562967914-608f82629710?w=800",
+  },
+  {
+    name: "Chicken Tenders",
+    subtitle: "3 for £4.50 · Golden & crispy",
+    image: "https://images.unsplash.com/photo-1587814213670-c7c7e2a1ad8b?w=800",
+  },
+  {
+    name: "Soft Drink",
+    subtitle: "Ice cold · Various flavours",
+    image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=800",
+  },
+];
+
+const pricingMenu = [
+  {
+    section: "🍔 Smash Burgers",
     items: [
-      { name: "Single Patty", price: "£4.00", image: IMGS.burger },
-      { name: "Double Patty", price: "£6.00", image: IMGS.burger },
-      { name: "Triple Patty", price: "£8.00", image: IMGS.burger },
-    ],
-    addons: [
-      {
-        type: "sauces",
-        title: "Choose Your Sauce",
-        subtitle: "Free with every burger",
-        options: ["Classic", "Ketchup", "Mayonnaise", "Spicy Algerian", "BBQ"],
-      },
-      {
-        type: "toppings",
-        title: "Extra Toppings",
-        items: [
-          { name: "Caramelised Onions", price: "+£1.00" },
-          { name: "Jalapeños", price: "+£1.00" },
-          { name: "Chilli Cheese Bites", price: "+£2.00" },
-        ],
-      },
+      { name: "Single Smash", price: "£4.00", desc: "Single smashed patty, American cheese, lettuce, gherkins" },
+      { name: "Double Smash", price: "£6.00", desc: "Two smashed patties, double cheese, all the good stuff" },
+      { name: "Triple Smash", price: "£8.00", desc: "Triple patty, triple cheese — legend only" },
     ],
   },
   {
-    id: "chicken-burger",
-    title: "Chicken Burger",
-    description: "Crispy chicken tenders topped with lettuce and mayonnaise in a brioche bun",
-    items: [{ name: "Chicken Burger", price: "£5.00", image: IMGS.chicken }],
-    addons: [
-      {
-        type: "mealDeal",
-        title: "Make It A Meal",
-        subtitle: "+£2.00",
-        description: "Add skin on fries, dip of your choice & soft drink to any burger",
-      },
-    ],
-  },
-  {
-    id: "sides",
-    title: "Sides",
+    section: "🍗 Chicken",
     items: [
-      { name: "Skin On Fries", price: "£1.50", image: IMGS.fries },
-      { name: "Cheese Fries", price: "£3.00", image: IMGS.fries },
-      { name: "Chicken Popcorn", price: "£3.00", image: IMGS.chicken },
-      { name: "Chilli Cheese Bites", price: "£3.00", image: IMGS.loadedFries },
-      { name: "Chicken Tenders (3)", price: "£4.50", image: IMGS.chicken },
-      { name: "Loaded Fries", price: "£5.00", image: IMGS.loadedFries },
+      { name: "Chicken Burger", price: "£5.00", desc: "Crispy chicken fillet, brioche, slaw, sauce" },
     ],
   },
   {
-    id: "dips",
-    title: "Dips",
-    items: [],
-    addons: [
-      {
-        type: "list",
-        title: "Dips",
-        subtitle: "£0.30 each",
-        items: [
-          { name: "Sweet Chilli", price: "£0.30" },
-          { name: "Hot Chilli", price: "£0.30" },
-          { name: "Ketchup", price: "£0.30" },
-          { name: "Mayonnaise", price: "£0.30" },
-          { name: "Spicy Algerian", price: "£0.30" },
-        ],
-      },
-    ],
-  },
-  {
-    id: "beverages",
-    title: "Drinks",
+    section: "🍟 Sides",
     items: [
-      { name: "Water Bottle", price: "£1.20", image: IMGS.drinks },
-      { name: "Soft Drink", price: "£1.50", image: IMGS.drinks },
+      { name: "Skin On Fries", price: "£1.50", desc: "Fresh cut skin-on fries, seasoned" },
+      { name: "Cheese Fries", price: "£3.00", desc: "Skin on fries with cheese sauce" },
+      { name: "Chicken Popcorn", price: "£3.00", desc: "Crispy chicken bites" },
+      { name: "Chilli Cheese Bites", price: "£3.00", desc: "Jalapeño and cheese bites" },
+      { name: "Chicken Tenders", price: "£4.50", desc: "3 golden crispy tenders" },
+      { name: "Loaded Fries", price: "£5.00", desc: "Fully loaded with toppings" },
+    ],
+  },
+  {
+    section: "🧀 Extra Toppings",
+    items: [
+      { name: "Caramelised Onions", price: "+£1.00", desc: "" },
+      { name: "Jalapeños", price: "+£1.00", desc: "" },
+      { name: "Chilli Cheese Bites", price: "+£2.00", desc: "" },
+    ],
+  },
+  {
+    section: "🥫 Sauces",
+    items: [
+      { name: "Classic / Ketchup / Mayo", price: "Free", desc: "" },
+      { name: "Spicy Algerian", price: "Free", desc: "" },
+      { name: "BBQ", price: "Free", desc: "" },
+    ],
+  },
+  {
+    section: "🍱 Make It A Meal",
+    items: [
+      { name: "Add Fries, Dip & Soft Drink", price: "+£2.00", desc: "Add to any burger" },
+    ],
+  },
+  {
+    section: "🥛 Dips",
+    items: [
+      { name: "Sweet Chilli / Hot Chilli / Ketchup", price: "£0.30", desc: "" },
+      { name: "Mayo / Spicy Algerian", price: "£0.30", desc: "" },
+    ],
+  },
+  {
+    section: "🥤 Beverages",
+    items: [
+      { name: "Water", price: "£1.20", desc: "" },
+      { name: "Soft Drink", price: "£1.50", desc: "Various flavours" },
     ],
   },
 ];
 
-const navTabs = [
-  { id: "smash-burgers", label: "Burgers" },
-  { id: "chicken-burger", label: "Chicken" },
-  { id: "sides", label: "Sides" },
-  { id: "dips", label: "Dips" },
-  { id: "beverages", label: "Drinks" },
-];
+/* ─────────────────────────────────────────────
+   VISUAL MENU COMPONENT
+───────────────────────────────────────────── */
 
-export default function MenuPage() {
-  const [activeSection, setActiveSection] = useState("smash-burgers");
-  const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
-
-  const scrollToSection = (id: string) => {
-    const el = sectionRefs.current[id];
-    if (!el) return;
-    const offset = 130; // navbar (64) + tab bar (~66)
-    const top = el.getBoundingClientRect().top + window.scrollY - offset;
-    window.scrollTo({ top, behavior: "smooth" });
-  };
+function VisualMenu() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id);
+          if (entry.isIntersecting) {
+            const idx = itemRefs.current.indexOf(entry.target as HTMLDivElement);
+            if (idx !== -1) setActiveIndex(idx);
+          }
         });
       },
-      { rootMargin: "-20% 0px -60% 0px" }
+      { root: container, threshold: 0.5 }
     );
-    Object.values(sectionRefs.current).forEach((ref) => {
-      if (ref) observer.observe(ref);
-    });
+
+    itemRefs.current.forEach((el) => { if (el) observer.observe(el); });
     return () => observer.disconnect();
   }, []);
 
   return (
-    <div className="bg-[#F5F5F0] min-h-screen">
+    <div className="relative" style={{ height: "calc(100dvh - 64px)" }}>
+      {/* Scroll container */}
+      <div ref={containerRef} className="menu-scroll-container" style={{ height: "calc(100dvh - 64px)" }}>
+        {visualItems.map((item, i) => (
+          <div
+            key={item.name}
+            ref={(el) => { itemRefs.current[i] = el; }}
+            className="menu-snap-item relative flex flex-col"
+            style={{ height: "calc(100dvh - 64px)" }}
+          >
+            {/* Photo — 75% */}
+            <div className="relative flex-1 overflow-hidden" style={{ flexBasis: "75%" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={item.image}
+                alt={item.name}
+                className="w-full h-full object-cover"
+                loading={i === 0 ? "eager" : "lazy"}
+              />
+              {/* Top vignette */}
+              <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0D0D0D]/60 to-transparent" />
+              {/* Bottom vignette */}
+              <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#0D0D0D] to-transparent" />
+            </div>
+
+            {/* Info — 25% */}
+            <div
+              className="bg-[#0D0D0D] flex flex-col justify-center px-6 pb-4"
+              style={{ flexBasis: "25%" }}
+            >
+              <h2
+                className="text-[#F5F5F0] leading-tight mb-1"
+                style={{
+                  fontFamily: "var(--font-archivo), sans-serif",
+                  fontSize: "clamp(1.8rem, 6vw, 3rem)",
+                  letterSpacing: "0.02em",
+                }}
+              >
+                {item.name}
+              </h2>
+              <p className="text-[#9A9A8A] text-sm md:text-base">{item.subtitle}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Scroll position dots */}
+      <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-10">
+        {visualItems.map((_, i) => (
+          <button
+            key={i}
+            aria-label={`Go to item ${i + 1}`}
+            onClick={() => {
+              itemRefs.current[i]?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className={`rounded-full transition-all duration-300 ${
+              i === activeIndex
+                ? "w-2 h-6 bg-[#E8B84B]"
+                : "w-1.5 h-1.5 bg-[#9A9A8A]/40 hover:bg-[#9A9A8A]"
+            }`}
+          />
+        ))}
+      </div>
+
+      {/* Swipe hint on first load */}
+      {activeIndex === 0 && (
+        <div className="absolute bottom-[27%] left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 animate-bounce pointer-events-none">
+          <p className="text-[#9A9A8A] text-xs tracking-widest uppercase">Scroll</p>
+          <div className="w-px h-6 bg-gradient-to-b from-[#E8B84B]/60 to-transparent" />
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   PRICING MENU COMPONENT
+───────────────────────────────────────────── */
+
+function PricingMenu() {
+  return (
+    <div className="max-w-2xl mx-auto px-4 py-8 pb-16">
+      {pricingMenu.map((section) => (
+        <div key={section.section} className="mb-8">
+          <h3
+            className="text-[#E8B84B] text-lg font-black uppercase tracking-wide mb-3 pb-2 border-b border-[#E8B84B]/20"
+            style={{ fontFamily: "var(--font-archivo), sans-serif" }}
+          >
+            {section.section}
+          </h3>
+          <div className="space-y-1">
+            {section.items.map((item) => (
+              <div
+                key={item.name}
+                className="flex items-start justify-between gap-4 py-3 border-b border-[#1F1F1F]"
+              >
+                <div className="flex-1 min-w-0">
+                  <p className="text-[#F5F5F0] font-semibold text-base">{item.name}</p>
+                  {item.desc && (
+                    <p className="text-[#9A9A8A] text-sm mt-0.5">{item.desc}</p>
+                  )}
+                </div>
+                <p
+                  className="text-[#E8B84B] font-black text-base shrink-0"
+                  style={{ fontFamily: "var(--font-archivo), sans-serif" }}
+                >
+                  {item.price}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   PAGE
+───────────────────────────────────────────── */
+
+export default function MenuPage() {
+  const [activeTab, setActiveTab] = useState<"visual" | "pricing">("visual");
+
+  return (
+    <div className="bg-[#0D0D0D] min-h-[100dvh]">
       <Navbar />
 
-      {/* Sticky category tabs — sits below the Navbar (top-16) */}
-      <div className="sticky top-16 z-40 bg-[#111111] border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 flex gap-1 overflow-x-auto scrollbar-none py-2">
-          {navTabs.map(({ id, label }) => (
+      {/* Tab switcher — sits right below navbar */}
+      <div
+        className="sticky top-16 z-30 bg-[#0D0D0D]/95 backdrop-blur-md border-b border-[#E8B84B]/10"
+      >
+        <div className="flex max-w-2xl mx-auto">
+          {(["visual", "pricing"] as const).map((tab) => (
             <button
-              key={id}
-              onClick={() => scrollToSection(id)}
-              className={`px-5 py-2 text-xs font-bold tracking-[0.15em] uppercase whitespace-nowrap rounded-sm transition-all ${
-                activeSection === id
-                  ? "bg-[#FFD700] text-[#111111]"
-                  : "text-gray-400 hover:text-white"
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`flex-1 py-3.5 text-sm font-black uppercase tracking-widest transition-all duration-200 border-b-2 ${
+                activeTab === tab
+                  ? "border-[#E8B84B] text-[#E8B84B]"
+                  : "border-transparent text-[#9A9A8A] hover:text-[#F5F5F0]"
               }`}
+              style={{ fontFamily: "var(--font-archivo), sans-serif", minHeight: "44px" }}
             >
-              {label}
+              {tab === "visual" ? "Menu" : "Prices"}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Menu Sections */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 space-y-16">
-        {menuSections.map((section) => (
-          <div
-            key={section.id}
-            id={section.id}
-            ref={(el) => { sectionRefs.current[section.id] = el; }}
-          >
-            {/* Section heading */}
-            <h2
-              className="text-4xl md:text-5xl text-[#111111] mb-2"
-              style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}
-            >
-              {section.title}
-            </h2>
-            {section.description && (
-              <p className="text-sm text-[#666666] mb-7 max-w-xl leading-relaxed">
-                {section.description}
-              </p>
-            )}
-
-            {/* Photo cards grid */}
-            {section.items.length > 0 && (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                {section.items.map((item) => (
-                  <div key={item.name} className="bg-[#111111] rounded overflow-hidden group">
-                    {item.image && (
-                      <div className="h-40 sm:h-48 overflow-hidden">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                      </div>
-                    )}
-                    <div className="p-4">
-                      <p className="text-white font-bold text-sm md:text-base leading-snug">
-                        {item.name}
-                      </p>
-                      {item.description && (
-                        <p className="text-gray-500 text-xs mt-1 leading-snug">{item.description}</p>
-                      )}
-                      <p
-                        className="text-[#FFD700] font-bold mt-2"
-                        style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem" }}
-                      >
-                        {item.price}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Addon sections (sauces, toppings, meal deal, lists) */}
-            {section.addons && section.addons.length > 0 && (
-              <div className="space-y-4">
-                {section.addons.map((addon, i) => {
-                  if (addon.type === "sauces") {
-                    return (
-                      <div key={i} className="bg-white rounded p-5 border border-gray-200">
-                        <div className="flex items-baseline gap-3 mb-3">
-                          <h3
-                            className="text-xl text-[#111111]"
-                            style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}
-                          >
-                            {addon.title}
-                          </h3>
-                          <span className="text-xs font-semibold text-green-600 uppercase tracking-wider">
-                            {addon.subtitle}
-                          </span>
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          {addon.options.map((opt) => (
-                            <span
-                              key={opt}
-                              className="px-3 py-1.5 bg-[#F5F5F0] text-[#333333] text-sm font-semibold rounded-sm border border-gray-200"
-                            >
-                              {opt}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  }
-
-                  if (addon.type === "toppings") {
-                    return (
-                      <div key={i} className="bg-white rounded p-5 border border-gray-200">
-                        <h3
-                          className="text-xl text-[#111111] mb-3"
-                          style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}
-                        >
-                          {addon.title}
-                        </h3>
-                        <div className="divide-y divide-gray-100">
-                          {addon.items.map((item) => (
-                            <div key={item.name} className="flex justify-between items-center py-2.5">
-                              <span className="text-sm font-medium text-[#222222]">{item.name}</span>
-                              <span
-                                className="text-sm font-bold text-[#111111] ml-4"
-                                style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1rem" }}
-                              >
-                                {item.price}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  }
-
-                  if (addon.type === "mealDeal") {
-                    return (
-                      <div key={i} className="border-2 border-[#FFD700] bg-[#111111] rounded p-5 flex items-center gap-4">
-                        <span
-                          className="text-[#FFD700] text-3xl shrink-0"
-                          style={{ fontFamily: "'Bebas Neue', sans-serif" }}
-                        >
-                          {addon.subtitle}
-                        </span>
-                        <div>
-                          <p
-                            className="text-white font-bold text-base"
-                            style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em", fontSize: "1.1rem" }}
-                          >
-                            {addon.title}
-                          </p>
-                          <p className="text-gray-400 text-sm">{addon.description}</p>
-                        </div>
-                      </div>
-                    );
-                  }
-
-                  if (addon.type === "list") {
-                    return (
-                      <div key={i} className="bg-white rounded p-5 border border-gray-200">
-                        <div className="flex items-baseline gap-3 mb-3">
-                          <h3
-                            className="text-xl text-[#111111]"
-                            style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}
-                          >
-                            {addon.title}
-                          </h3>
-                          {addon.subtitle && (
-                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                              {addon.subtitle}
-                            </span>
-                          )}
-                        </div>
-                        <div className="divide-y divide-gray-100">
-                          {addon.items.map((item) => (
-                            <div key={item.name} className="flex justify-between items-center py-2.5">
-                              <span className="text-sm font-medium text-[#222222]">{item.name}</span>
-                              <span
-                                className="text-sm font-bold text-[#111111] ml-4"
-                                style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1rem" }}
-                              >
-                                {item.price}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  }
-
-                  return null;
-                })}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* Bottom CTA */}
-      <section className="bg-[#111111] py-14 px-4 text-center">
-        <p
-          className="text-[#FFD700] text-4xl md:text-5xl mb-2"
-          style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}
-        >
-          Earn Points on Every Order
-        </p>
-        <p className="text-gray-400 mb-6 text-sm tracking-widest uppercase">
-          Every £1 spent = 1 point · 50 points = £5 reward
-        </p>
-        <Link href="/loyalty" className="btn-primary px-10 py-4 text-lg">
-          Join Loyalty Program
-        </Link>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-[#0a0a0a] text-gray-600 text-center py-6 px-4 text-sm">
-        <p className="mb-1">Ooo..FAT! · Birmingham · Drive-Thru</p>
-        <p>Open Daily 6PM – 2AM</p>
-      </footer>
+      {/* Tab content */}
+      {activeTab === "visual" ? <VisualMenu /> : <PricingMenu />}
     </div>
   );
 }
