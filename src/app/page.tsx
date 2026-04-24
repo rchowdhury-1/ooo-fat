@@ -50,8 +50,9 @@ export default function HomePage() {
             className="rounded-full mb-6 shadow-2xl ring-2 ring-[#E8B84B]/30 w-24 h-24 md:w-40 md:h-40"
           />
 
-          <p className="text-[#E8B84B] text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase mb-4">
-            Open 7 Days a Week 6PM – 2AM&nbsp;&nbsp;·&nbsp;&nbsp;Drive-Thru Only&nbsp;&nbsp;·&nbsp;&nbsp;Birmingham
+          <p className="text-[#E8B84B] text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase mb-4 text-center leading-relaxed">
+            OPEN 7 DAYS A WEEK&nbsp;&nbsp;·&nbsp;&nbsp;6PM – 2AM<br />
+            DRIVE-THRU ONLY&nbsp;&nbsp;·&nbsp;&nbsp;BIRMINGHAM
           </p>
 
           <h1
@@ -75,8 +76,10 @@ export default function HomePage() {
             Smash the beef, turn up the flavour
           </p>
 
-          <p className="text-[#9A9A8A] text-base md:text-xl mb-8 max-w-xs md:max-w-md font-light">
-            Angus beef&nbsp;·&nbsp;Brioche bun&nbsp;·&nbsp;No compromises.
+          <p className="text-[#9A9A8A] mb-8 max-w-xs md:max-w-md text-center font-light">
+            <span className="text-base md:text-xl">Angus beef&nbsp;·&nbsp;Brioche bun</span>
+            <br />
+            <span className="text-lg md:text-2xl font-semibold text-[#F5F5F0] mt-1 block">No compromises.</span>
           </p>
 
           <div className="flex flex-wrap gap-3 md:gap-4 justify-center">
