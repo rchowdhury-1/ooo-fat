@@ -322,7 +322,7 @@ export default function MenuPage() {
   const [activeTab, setActiveTab] = useState<"visual" | "pricing">("visual");
 
   return (
-    <div className="bg-[#0D0D0D] min-h-[100dvh]">
+    <div className="bg-[#0D0D0D] min-h-[100dvh] pt-16">
       <Navbar />
 
       {/* Tab switcher */}
