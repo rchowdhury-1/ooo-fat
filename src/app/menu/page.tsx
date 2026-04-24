@@ -345,8 +345,13 @@ export default function MenuPage() {
         </div>
       </div>
 
-      {/* Tab content */}
-      {activeTab === "visual" ? <VisualMenu /> : <PricingMenu />}
+      {/* Tab content — constrained so the scrollbar stays below the tabs */}
+      <div
+        className="no-scrollbar"
+        style={{ height: "calc(100dvh - 112px)", overflowY: "auto" }}
+      >
+        {activeTab === "visual" ? <VisualMenu /> : <PricingMenu />}
+      </div>
     </div>
   );
 }
