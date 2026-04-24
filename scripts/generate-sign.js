@@ -19,56 +19,58 @@ const OUT = path.join(ROOT, "public", "images", "menu-sign.png");
 /* ── Dimensions ──────────────────────────── */
 const W = 2480;
 const H = 3508;
+const INSET = 40;
+const BW = 8;
 
 /* ── Colours ─────────────────────────────── */
-const BG = "#0D0D0D";
-const GOLD = "#E8B84B";
+const BG    = "#0D0D0D";
+const GOLD  = "#E8B84B";
 const CREAM = "#F5F5F0";
 const MUTED = "#9A9A8A";
 
-/* ── Register fonts ──────────────────────── */
 registerFont(FONT_PM, { family: "PermanentMarker" });
 
-/* ── Helpers ─────────────────────────────── */
-function centredText(ctx, text, y) {
+function mid(ctx, text, y) {
   ctx.fillText(text, W / 2, y);
+}
+
+function dashedLine(ctx, y) {
+  ctx.save();
+  ctx.strokeStyle = GOLD + "55";
+  ctx.lineWidth = 2;
+  ctx.setLineDash([14, 10]);
+  ctx.beginPath();
+  ctx.moveTo(INSET + 80, y);
+  ctx.lineTo(W - INSET - 80, y);
+  ctx.stroke();
+  ctx.restore();
 }
 
 async function main() {
   console.log("Generating menu sign…");
 
   const canvas = createCanvas(W, H);
-  const ctx = canvas.getContext("2d");
+  const ctx    = canvas.getContext("2d");
 
-  /* ── Background ─────────────────────────── */
+  /* ── Background ───────────────────────── */
   ctx.fillStyle = BG;
   ctx.fillRect(0, 0, W, H);
 
-  /* ── Gold border ─────────────────────────── */
-  const INSET = 40;
-  const BW = 8;
+  /* ── Gold border ──────────────────────── */
   ctx.strokeStyle = GOLD;
-  ctx.lineWidth = BW;
+  ctx.lineWidth   = BW;
   ctx.beginPath();
-  ctx.roundRect(INSET, INSET, W - INSET * 2, H - INSET * 2, 24);
+  ctx.roundRect(INSET, INSET, W - INSET * 2, H - INSET * 2, 28);
   ctx.stroke();
 
-  /* ── Corner ornaments (L-shapes) ─────────── */
-  const arm = 90;
-  const cx1 = INSET, cy1 = INSET;
-  const cx2 = W - INSET, cy2 = INSET;
-  const cx3 = INSET, cy3 = H - INSET;
-  const cx4 = W - INSET, cy4 = H - INSET;
-
-  ctx.lineWidth = BW;
+  /* ── Corner ornaments ─────────────────── */
+  const arm = 100;
+  ctx.lineWidth  = BW;
+  ctx.lineCap    = "square";
   ctx.strokeStyle = GOLD;
-  ctx.lineCap = "square";
-
   for (const [px, py, dx, dy] of [
-    [cx1, cy1, 1, 1],
-    [cx2, cy2, -1, 1],
-    [cx3, cy3, 1, -1],
-    [cx4, cy4, -1, -1],
+    [INSET, INSET, 1, 1], [W - INSET, INSET, -1, 1],
+    [INSET, H - INSET, 1, -1], [W - INSET, H - INSET, -1, -1],
   ]) {
     ctx.beginPath();
     ctx.moveTo(px, py + dy * arm);
@@ -77,12 +79,15 @@ async function main() {
     ctx.stroke();
   }
 
-  /* ── Logo ────────────────────────────────── */
-  const LOGO_SIZE = 380;
-  const LOGO_TOP = 190;
-  const logoImg = await loadImage(LOGO);
-  const lx = (W - LOGO_SIZE) / 2;
-  // circular clip
+  /* ──────────────────────────────────────
+     TOP BRANDING — compact
+  ────────────────────────────────────── */
+
+  // Logo: 200px circle
+  const LOGO_SIZE = 200;
+  const LOGO_TOP  = 130;
+  const logoImg   = await loadImage(LOGO);
+  const lx        = (W - LOGO_SIZE) / 2;
   ctx.save();
   ctx.beginPath();
   ctx.arc(lx + LOGO_SIZE / 2, LOGO_TOP + LOGO_SIZE / 2, LOGO_SIZE / 2, 0, Math.PI * 2);
@@ -90,82 +95,68 @@ async function main() {
   ctx.drawImage(logoImg, lx, LOGO_TOP, LOGO_SIZE, LOGO_SIZE);
   ctx.restore();
 
-  /* ── Brand name (Permanent Marker) ───────── */
-  ctx.font = "bold 220px PermanentMarker";
-  ctx.fillStyle = GOLD;
-  ctx.textAlign = "center";
+  // Brand name — Permanent Marker, 150px
+  ctx.font         = "150px PermanentMarker";
+  ctx.fillStyle    = GOLD;
+  ctx.textAlign    = "center";
   ctx.textBaseline = "middle";
-  centredText(ctx, "Ooo..FAT!", LOGO_TOP + LOGO_SIZE + 155);
+  mid(ctx, "Ooo..FAT!", LOGO_TOP + LOGO_SIZE + 110);
 
-  /* ── Slogan ──────────────────────────────── */
-  ctx.font = "300 52px sans-serif";
-  ctx.fillStyle = MUTED;
-  centredText(ctx, "Smash the beef, turn up the flavour", LOGO_TOP + LOGO_SIZE + 320);
+  // Dashed divider below branding
+  const DIV_TOP = LOGO_TOP + LOGO_SIZE + 210;
+  dashedLine(ctx, DIV_TOP);
 
-  /* ── Divider 1 ───────────────────────────── */
-  const DIV1 = LOGO_TOP + LOGO_SIZE + 420;
-  ctx.strokeStyle = `${GOLD}66`;
-  ctx.lineWidth = 2;
-  ctx.setLineDash([12, 8]);
-  ctx.beginPath();
-  ctx.moveTo(INSET + 60, DIV1);
-  ctx.lineTo(W - INSET - 60, DIV1);
-  ctx.stroke();
-  ctx.setLineDash([]);
+  /* ──────────────────────────────────────
+     QR CODE — dominant, 64% of width
+  ────────────────────────────────────── */
 
-  /* ── "Scan to view" label ────────────────── */
-  ctx.font = "700 60px sans-serif";
-  ctx.fillStyle = GOLD;
-  ctx.letterSpacing = "10px";
-  centredText(ctx, "SCAN TO VIEW OUR MENU", DIV1 + 90);
+  const QR_SIZE = Math.round(W * 0.64); // 1587px ≈ 64%
+  const QR_TOP  = DIV_TOP + 60;
+  const qrImg   = await loadImage(QR);
+  ctx.drawImage(qrImg, (W - QR_SIZE) / 2, QR_TOP, QR_SIZE, QR_SIZE);
 
-  /* ── QR code ─────────────────────────────── */
-  const QR_SIZE = 920;
-  const qrImg = await loadImage(QR);
-  const DIV2 = H - 560;
-  const qrMidY = (DIV1 + DIV2) / 2;
-  const qrTop = qrMidY - QR_SIZE / 2 + 60;
-  ctx.drawImage(qrImg, (W - QR_SIZE) / 2, qrTop, QR_SIZE, QR_SIZE);
+  /* ──────────────────────────────────────
+     "SCAN TO VIEW OUR MENU" — primary CTA
+     sits directly below the QR code
+  ────────────────────────────────────── */
 
-  /* ── Divider 2 ───────────────────────────── */
-  ctx.strokeStyle = `${GOLD}66`;
-  ctx.lineWidth = 2;
-  ctx.setLineDash([12, 8]);
-  ctx.beginPath();
-  ctx.moveTo(INSET + 60, DIV2);
-  ctx.lineTo(W - INSET - 60, DIV2);
-  ctx.stroke();
-  ctx.setLineDash([]);
+  const CTA_Y = QR_TOP + QR_SIZE + 90;
 
-  /* ── Footer text ─────────────────────────── */
-  ctx.textAlign = "center";
+  ctx.font         = "bold 96px sans-serif";
+  ctx.fillStyle    = GOLD;
+  ctx.textAlign    = "center";
+  ctx.textBaseline = "middle";
+  mid(ctx, "SCAN TO VIEW OUR MENU", CTA_Y);
+
+  /* ──────────────────────────────────────
+     FOOTER — secondary info, small
+  ────────────────────────────────────── */
+
+  const DIV_BOT = CTA_Y + 110;
+  dashedLine(ctx, DIV_BOT);
+
+  ctx.textAlign    = "center";
   ctx.textBaseline = "middle";
 
-  ctx.font = "600 70px sans-serif";
+  ctx.font      = "600 50px sans-serif";
   ctx.fillStyle = CREAM;
-  centredText(ctx, "Open 7 Days a Week  ·  6PM – 2AM", DIV2 + 95);
+  mid(ctx, "Open 7 Days a Week  ·  6PM – 2AM", DIV_BOT + 76);
 
-  ctx.font = "400 52px sans-serif";
+  ctx.font      = "400 42px sans-serif";
   ctx.fillStyle = MUTED;
-  centredText(ctx, "878 Kingsbury Rd, Birmingham B24 9PT", DIV2 + 210);
+  mid(ctx, "878 Kingsbury Rd, Birmingham B24 9PT  ·  Drive-Thru Only", DIV_BOT + 152);
 
-  ctx.font = "700 50px sans-serif";
+  ctx.font      = "500 46px sans-serif";
   ctx.fillStyle = GOLD;
-  centredText(ctx, "DRIVE-THRU ONLY", DIV2 + 320);
+  mid(ctx, "www.ooofat.com", DIV_BOT + 232);
 
-  ctx.font = "600 58px sans-serif";
-  ctx.fillStyle = GOLD;
-  centredText(ctx, "www.ooofat.com", DIV2 + 430);
-
-  /* ── Save ────────────────────────────────── */
+  /* ── Save ─────────────────────────────── */
   const buf = canvas.toBuffer("image/png");
   fs.mkdirSync(path.dirname(OUT), { recursive: true });
   fs.writeFileSync(OUT, buf);
   console.log(`Saved → ${OUT}`);
   console.log(`Size: ${(buf.length / 1024 / 1024).toFixed(1)} MB`);
+  console.log(`QR size: ${QR_SIZE}px (${((QR_SIZE/W)*100).toFixed(0)}% of width)`);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+main().catch((err) => { console.error(err); process.exit(1); });
