@@ -133,6 +133,7 @@ const pricingMenu = [
     section: "🍟 Fries",
     note: "All loaded fries come with cheese sauce, Hannibal sauce and jalapeños",
     items: [
+      { name: "Skin on Fries", price: "£2.00", desc: "" },
       { name: "Cheese Fries", price: "£3.50", desc: "" },
       { name: "Chicken Loaded Fries", price: "£5.00", desc: "" },
       { name: "Beef Loaded Fries", price: "£5.00", desc: "" },
