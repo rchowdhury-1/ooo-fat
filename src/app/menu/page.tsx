@@ -201,7 +201,7 @@ export default function MenuPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/menu-v2")
+    fetch("/api/menu")
       .then((r) => r.json())
       .then((data) => {
         setCategories(Array.isArray(data) ? data : []);
