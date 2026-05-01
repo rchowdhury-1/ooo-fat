@@ -59,8 +59,8 @@ const visualItems = [
   {
     name: "Chicken Popcorn",
     subtitle: "Crispy bites · Perfect snack",
-    image: "https://images.unsplash.com/photo-1562967914-608f82629710?w=800",
-    alt: "Crispy chicken popcorn bites",
+    image: "/images/food/sides-combo-card.jpg",
+    alt: "Crispy chicken popcorn bites with dipping sauce",
   },
   {
     name: "Chicken Tenders",
