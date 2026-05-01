@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server';
-import sql from '@/lib/db';
+import { neon } from '@neondatabase/serverless';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
+    // Fresh connection per request to avoid stale pooled query plans
+    const sql = neon(process.env.DATABASE_URL!);
+
     const categories = await sql`
       SELECT id, name, emoji, note, position
       FROM categories
