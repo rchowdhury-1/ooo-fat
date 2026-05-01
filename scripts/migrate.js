@@ -75,11 +75,11 @@ async function migrate() {
     { cat: 'Smash Burger', name: 'Triple Smash', price: 9.00, price_label: '', position: 2, image_url: '/images/food/triple-smash-burger-card.jpg', subtitle: 'Triple patty · For the brave' },
 
     // Chicken Burger
-    { cat: 'Chicken Burger', name: 'Single', price: 5.00, price_label: '', position: 0, image_url: '/images/food/chicken-burger-card.jpg', subtitle: 'Crispy chicken · Lettuce · Mayo · Brioche' },
+    { cat: 'Chicken Burger', name: 'Chicken Burger', price: 5.00, price_label: '', position: 0, image_url: '/images/food/chicken-burger-card.jpg', subtitle: 'Crispy chicken · Lettuce · Mayo · Brioche' },
     { cat: 'Chicken Burger', name: 'Double', price: 7.00, price_label: '', position: 1, image_url: '', subtitle: '' },
 
     // Mix Burger
-    { cat: 'Mix Burger', name: 'Single Patty', price: 7.00,  price_label: '', position: 0, image_url: '/images/food/mix-burger-card.jpg', subtitle: 'Beef & chicken · American cheese · Brioche' },
+    { cat: 'Mix Burger', name: 'Mix Burger', price: 7.00,  price_label: '', position: 0, image_url: '/images/food/mix-burger-card.jpg', subtitle: 'Beef & chicken · American cheese · Brioche' },
     { cat: 'Mix Burger', name: 'Double Patty', price: 9.00,  price_label: '', position: 1, image_url: '', subtitle: '' },
     { cat: 'Mix Burger', name: 'Triple Patty', price: 11.00, price_label: '', position: 2, image_url: '', subtitle: '' },
 

@@ -26,7 +26,9 @@ export async function GET() {
       items: (items as Row[]).filter((item) => item.category_id === cat.id),
     }));
 
-    return NextResponse.json(result);
+    return NextResponse.json(result, {
+      headers: { 'Cache-Control': 'no-store' },
+    });
   } catch (error) {
     console.error('GET /api/menu error:', error);
     return NextResponse.json({ error: 'Failed to fetch menu' }, { status: 500 });
