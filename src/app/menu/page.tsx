@@ -11,13 +11,13 @@ const visualItems = [
   {
     name: "Single Smash",
     subtitle: "Angus beef · American cheese · Brioche",
-    image: "/images/food/smash-burger-hero.jpg",
+    image: "/images/food/single-smash-burger.png",
     alt: "Single smash burger with American cheese on a brioche bun",
   },
   {
     name: "Double Smash",
     subtitle: "Two smashed patties · Double cheese",
-    image: "/images/food/double-smash-burger-card.jpg",
+    image: "/images/food/smash-burger-hero.jpg",
     alt: "Double smash burger with two smashed Angus beef patties and double American cheese",
   },
   {
