@@ -71,8 +71,8 @@ const visualItems = [
   {
     name: "Soft Drink",
     subtitle: "Pepsi · Rio · Tango · Mango · Guava · Irn Bru",
-    image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=800",
-    alt: "Selection of soft drinks",
+    image: "/images/food/soft-drink.png",
+    alt: "Pepsi can",
   },
 ];
 
