@@ -24,7 +24,7 @@ const featuredItems = [
   {
     name: "Beef Loaded Fries",
     price: "£5",
-    image: "/images/food/beef-loaded-fries.jpg.png",
+    image: "/images/food/beef-loaded-fries.png",
     alt: "Beef loaded fries with cheese sauce, Hannibal sauce and jalapeños",
   },
 ];
@@ -167,7 +167,7 @@ export default function HomePage() {
               </div>
               <div className="relative rounded-2xl overflow-hidden h-32">
                 <Image
-                  src="/images/food/beef-loaded-fries.jpg.png"
+                  src="/images/food/beef-loaded-fries.png"
                   alt="Beef loaded fries with cheese sauce"
                   fill
                   className="object-cover"

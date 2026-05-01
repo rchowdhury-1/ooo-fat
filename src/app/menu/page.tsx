@@ -47,7 +47,7 @@ const visualItems = [
   {
     name: "Beef Loaded Fries",
     subtitle: "Cheese sauce · Hannibal sauce · Jalapeños",
-    image: "/images/food/beef-loaded-fries.jpg.png",
+    image: "/images/food/beef-loaded-fries.png",
     alt: "Beef loaded fries topped with cheese sauce, Hannibal sauce and jalapeños",
   },
   {
