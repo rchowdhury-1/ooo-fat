@@ -123,7 +123,7 @@ async function migrate() {
     { cat: 'Drinks', name: 'Mango',      price: 1.50, price_label: '', position: 3, image_url: '',                                  subtitle: '' },
     { cat: 'Drinks', name: 'Guava',      price: 1.50, price_label: '', position: 4, image_url: '',                                  subtitle: '' },
     { cat: 'Drinks', name: 'Irn Bru',    price: 1.50, price_label: '', position: 5, image_url: '',                                  subtitle: '' },
-    { cat: 'Drinks', name: 'Soft Drink',  price: 1.50, price_label: '', position: 6, image_url: '/images/food/soft-drink.png',       subtitle: 'Pepsi · Rio · Tango · Mango · Guava · Irn Bru' },
+    { cat: 'Drinks', name: 'Pepsi',      price: 1.50, price_label: '', position: 6, image_url: '/images/food/soft-drink.png',       subtitle: 'Pepsi · Rio · Tango · Mango · Guava · Irn Bru' },
     { cat: 'Drinks', name: 'Pepsi Max',  price: 1.50, price_label: '', position: 7, image_url: '',                                  subtitle: '' },
   ];
 
