@@ -39,9 +39,9 @@ function VisualMenu({ categories }: { categories: ApiCategory[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Flatten items that have an image
+  // Flatten items that have an image, carrying category name for display override
   const visualItems = categories.flatMap((c) =>
-    c.items.filter((i) => i.image_url)
+    c.items.filter((i) => i.image_url).map((i) => ({ ...i, _catName: c.name }))
   );
 
   useEffect(() => {
@@ -108,7 +108,7 @@ function VisualMenu({ categories }: { categories: ApiCategory[] }) {
                   letterSpacing: "0.02em",
                 }}
               >
-                {item.name}
+                {item._catName === "Sides" ? "Sides" : item.name}
               </h2>
               {item.subtitle && (
                 <p className="text-[#9A9A8A] text-sm leading-snug">{item.subtitle}</p>
