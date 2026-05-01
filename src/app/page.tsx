@@ -12,8 +12,8 @@ const featuredItems = [
   {
     name: "Double Smash",
     price: "£7",
-    image: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=600",
-    alt: "Double smash burger",
+    image: "/images/food/double-smash-burger-card.jpg",
+    alt: "Double smash burger with two smashed Angus beef patties and American cheese",
   },
   {
     name: "Chicken Burger",

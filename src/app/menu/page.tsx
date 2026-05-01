@@ -17,8 +17,8 @@ const visualItems = [
   {
     name: "Double Smash",
     subtitle: "Two smashed patties · Double cheese",
-    image: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=800",
-    alt: "Double smash burger with two patties",
+    image: "/images/food/double-smash-burger-card.jpg",
+    alt: "Double smash burger with two smashed Angus beef patties and double American cheese",
   },
   {
     name: "Triple Smash",
