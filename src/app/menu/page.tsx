@@ -41,13 +41,13 @@ const visualItems = [
   {
     name: "Cheese Fries",
     subtitle: "Skin on fries · Cheese sauce",
-    image: "/images/food/sides-combo-card.jpg",
+    image: "/images/food/cheese-fries.jpg",
     alt: "Cheese fries with creamy cheese sauce",
   },
   {
     name: "Beef Loaded Fries",
     subtitle: "Cheese sauce · Hannibal sauce · Jalapeños",
-    image: "/images/food/loaded-fries-card.jpg",
+    image: "/images/food/beef-loaded-fries.jpg.png",
     alt: "Beef loaded fries topped with cheese sauce, Hannibal sauce and jalapeños",
   },
   {
