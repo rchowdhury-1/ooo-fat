@@ -108,7 +108,7 @@ function VisualMenu({ categories }: { categories: ApiCategory[] }) {
                   letterSpacing: "0.02em",
                 }}
               >
-                {item._catName === "Sides" ? "Sides" : item.name}
+                {item._catName === "Sides" || item._catName === "Fries" ? item._catName : item.name}
               </h2>
               {item.subtitle && (
                 <p className="text-[#9A9A8A] text-sm leading-snug">{item.subtitle}</p>
