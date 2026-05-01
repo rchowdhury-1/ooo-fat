@@ -11,57 +11,68 @@ const visualItems = [
   {
     name: "Single Smash",
     subtitle: "Angus beef · American cheese · Brioche",
-    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800",
+    image: "/images/food/smash-burger-hero.jpg",
+    alt: "Single smash burger with American cheese on a brioche bun",
   },
   {
     name: "Double Smash",
     subtitle: "Two smashed patties · Double cheese",
     image: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=800",
+    alt: "Double smash burger with two patties",
   },
   {
     name: "Triple Smash",
     subtitle: "Triple patty · For the brave",
-    image: "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=800",
+    image: "/images/food/triple-smash-burger-card.jpg",
+    alt: "Triple smash burger stacked high with three smashed beef patties",
   },
   {
     name: "Chicken Burger",
     subtitle: "Crispy chicken · Lettuce · Mayo · Brioche",
-    image: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=800",
+    image: "/images/food/chicken-burger-card.jpg",
+    alt: "Crispy chicken burger with lettuce and mayo in a brioche bun",
   },
   {
     name: "Mix Burger",
     subtitle: "Beef & chicken · American cheese · Brioche",
-    image: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=800",
+    image: "/images/food/mix-burger-card.jpg",
+    alt: "Mix burger with beef and chicken patty, American cheese in brioche",
   },
   {
     name: "Cheese Fries",
     subtitle: "Skin on fries · Cheese sauce",
-    image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=800",
+    image: "/images/food/sides-combo-card.jpg",
+    alt: "Cheese fries with creamy cheese sauce",
   },
   {
     name: "Beef Loaded Fries",
     subtitle: "Cheese sauce · Hannibal sauce · Jalapeños",
-    image: "https://images.unsplash.com/photo-1585109649139-366815a0d713?w=800",
+    image: "/images/food/loaded-fries-card.jpg",
+    alt: "Beef loaded fries topped with cheese sauce, Hannibal sauce and jalapeños",
   },
   {
     name: "Chicken Loaded Fries",
     subtitle: "Chicken · Cheese sauce · Jalapeños",
-    image: "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=800",
+    image: "/images/food/loaded-fries-card.jpg",
+    alt: "Chicken loaded fries with cheese sauce and jalapeños",
   },
   {
     name: "Chicken Popcorn",
     subtitle: "Crispy bites · Perfect snack",
     image: "https://images.unsplash.com/photo-1562967914-608f82629710?w=800",
+    alt: "Crispy chicken popcorn bites",
   },
   {
     name: "Chicken Tenders",
     subtitle: "3 golden crispy tenders",
-    image: "https://images.unsplash.com/photo-1562967914-608f82629710?w=800",
+    image: "/images/food/chicken-tenders-card.jpg",
+    alt: "Three golden crispy chicken tenders",
   },
   {
     name: "Soft Drink",
     subtitle: "Pepsi · Rio · Tango · Mango · Guava · Irn Bru",
     image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=800",
+    alt: "Selection of soft drinks",
   },
 ];
 
@@ -210,7 +221,7 @@ function VisualMenu() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={item.image}
-                alt={item.name}
+                alt={item.alt}
                 className="w-full h-full object-cover"
                 loading={i === 0 ? "eager" : "lazy"}
               />

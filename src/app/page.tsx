@@ -6,22 +6,26 @@ const featuredItems = [
   {
     name: "Single Smash",
     price: "£5",
-    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600",
+    image: "/images/food/smash-burger-hero.jpg",
+    alt: "Single smash burger with American cheese on a brioche bun",
   },
   {
     name: "Double Smash",
     price: "£7",
     image: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=600",
+    alt: "Double smash burger",
   },
   {
     name: "Chicken Burger",
     price: "£5",
-    image: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=600",
+    image: "/images/food/chicken-burger-card.jpg",
+    alt: "Crispy chicken burger with lettuce and mayo on a brioche bun",
   },
   {
     name: "Beef Loaded Fries",
     price: "£5",
-    image: "https://images.unsplash.com/photo-1585109649139-366815a0d713?w=600",
+    image: "/images/food/loaded-fries-card.jpg",
+    alt: "Beef loaded fries with cheese sauce, Hannibal sauce and jalapeños",
   },
 ];
 
@@ -32,12 +36,13 @@ export default function HomePage() {
 
       {/* ── Hero ── */}
       <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden noise-overlay">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=1600"
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover object-center animate-hero-zoom"
+        <Image
+          src="/images/food/smash-burger-hero.jpg"
+          alt="Ooo..FAT! smash burger hero shot"
+          fill
+          priority
+          className="object-cover object-center animate-hero-zoom"
+          sizes="100vw"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0D0D0D]/80 via-[#0D0D0D]/30 to-[#0D0D0D]/90" />
 
@@ -142,24 +147,33 @@ export default function HomePage() {
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400"
-                alt="Smash burger"
-                className="rounded-2xl w-full h-40 md:h-48 object-cover col-span-2"
-              />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=400"
-                alt="Fries"
-                className="rounded-2xl w-full h-32 object-cover"
-              />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="https://images.unsplash.com/photo-1585109649139-366815a0d713?w=400"
-                alt="Loaded fries"
-                className="rounded-2xl w-full h-32 object-cover"
-              />
+              <div className="relative rounded-2xl overflow-hidden col-span-2 h-40 md:h-48">
+                <Image
+                  src="/images/food/smash-burger-hero.jpg"
+                  alt="Smash burger freshly made"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              </div>
+              <div className="relative rounded-2xl overflow-hidden h-32">
+                <Image
+                  src="/images/food/mix-burger-card.jpg"
+                  alt="Mix burger with beef and chicken"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                />
+              </div>
+              <div className="relative rounded-2xl overflow-hidden h-32">
+                <Image
+                  src="/images/food/loaded-fries-card.jpg"
+                  alt="Beef loaded fries with cheese sauce"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -189,12 +203,22 @@ export default function HomePage() {
                 className="bg-[#1F1F1F] rounded-2xl overflow-hidden group border border-[#E8B84B]/10 hover:border-[#E8B84B]/30 transition-all duration-300"
               >
                 <div className="h-40 md:h-52 overflow-hidden relative">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
+                  {item.image.startsWith("/") ? (
+                    <Image
+                      src={item.image}
+                      alt={item.alt}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      sizes="(max-width: 768px) 50vw, 25vw"
+                    />
+                  ) : (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={item.image}
+                      alt={item.alt}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-[#1F1F1F] via-transparent to-transparent" />
                 </div>
                 <div className="p-4">
