@@ -50,7 +50,7 @@ export default function Navbar() {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 shrink-0">
               <Image
-                src="/images/logo.jpeg"
+                src="/images/logo.webp"
                 width={36}
                 height={36}
                 alt="Ooo..FAT!"

@@ -6,25 +6,25 @@ const featuredItems = [
   {
     name: "Single Smash",
     price: "£5",
-    image: "/images/food/single-smash-burger.png",
+    image: "/images/food/single-smash-burger.webp",
     alt: "Single smash burger with American cheese on a brioche bun",
   },
   {
     name: "Double Smash",
     price: "£7",
-    image: "/images/food/smash-burger-hero.jpg",
+    image: "/images/food/smash-burger-hero.webp",
     alt: "Double smash burger with two smashed Angus beef patties and American cheese",
   },
   {
     name: "Chicken Burger",
     price: "£5",
-    image: "/images/food/chicken-burger-card.jpg",
+    image: "/images/food/chicken-burger-card.webp",
     alt: "Crispy chicken burger with lettuce and mayo on a brioche bun",
   },
   {
     name: "Beef Loaded Fries",
     price: "£5",
-    image: "/images/food/beef-loaded-fries.png",
+    image: "/images/food/beef-loaded-fries.webp",
     alt: "Beef loaded fries with cheese sauce, Hannibal sauce and jalapeños",
   },
 ];
@@ -37,7 +37,7 @@ export default function HomePage() {
       {/* ── Hero ── */}
       <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden noise-overlay">
         <Image
-          src="/images/food/smash-burger-hero.jpg"
+          src="/images/food/smash-burger-hero.webp"
           alt="Ooo..FAT! smash burger hero shot"
           fill
           priority
@@ -48,7 +48,7 @@ export default function HomePage() {
 
         <div className="relative z-10 flex flex-col items-center text-center px-4 pt-16">
           <Image
-            src="/images/logo.jpeg"
+            src="/images/logo.webp"
             width={200}
             height={200}
             alt="Ooo..FAT!"
@@ -149,7 +149,7 @@ export default function HomePage() {
             <div className="grid grid-cols-2 gap-3">
               <div className="relative rounded-2xl overflow-hidden col-span-2 h-40 md:h-48">
                 <Image
-                  src="/images/food/smash-burger-hero.jpg"
+                  src="/images/food/smash-burger-hero.webp"
                   alt="Smash burger freshly made"
                   fill
                   className="object-cover"
@@ -158,7 +158,7 @@ export default function HomePage() {
               </div>
               <div className="relative rounded-2xl overflow-hidden h-32">
                 <Image
-                  src="/images/food/mix-burger-card.jpg"
+                  src="/images/food/mix-burger-card.webp"
                   alt="Mix burger with beef and chicken"
                   fill
                   className="object-cover"
@@ -167,7 +167,7 @@ export default function HomePage() {
               </div>
               <div className="relative rounded-2xl overflow-hidden h-32">
                 <Image
-                  src="/images/food/beef-loaded-fries.png"
+                  src="/images/food/beef-loaded-fries.webp"
                   alt="Beef loaded fries with cheese sauce"
                   fill
                   className="object-cover"
