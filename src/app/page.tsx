@@ -311,7 +311,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="mt-6 pt-6 border-t border-[#E8B84B]/10 text-center">
-            <p className="text-[#9A9A8A]/30 text-xs">Website made by <a href="https://portfolio-project-tau-olive.vercel.app" target="_blank" rel="noopener noreferrer" className="text-[#E8B84B]/50 hover:text-[#E8B84B] transition-colors">Razwanul Chowdhury</a></p>
+            <p className="text-[#9A9A8A]/50 text-xs">Made by Razwanul Chowdhury — <a href="https://portfolio-project-tau-olive.vercel.app" target="_blank" rel="noopener noreferrer" className="underline text-[#E8B84B]/70 hover:text-[#E8B84B] transition-colors">Get in touch</a></p>
           </div>
         </div>
       </footer>
