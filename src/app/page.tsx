@@ -310,6 +310,9 @@ export default function HomePage() {
               <p className="text-[#9A9A8A]/30 text-xs">&copy; {new Date().getFullYear()} Ooo..FAT!</p>
             </div>
           </div>
+          <div className="mt-6 pt-6 border-t border-[#E8B84B]/10 text-center">
+            <p className="text-[#9A9A8A]/30 text-xs">Website made by <a href="https://portfolio-project-tau-olive.vercel.app" target="_blank" rel="noopener noreferrer" className="text-[#E8B84B]/50 hover:text-[#E8B84B] transition-colors">Razwanul Chowdhury</a></p>
+          </div>
         </div>
       </footer>
     </main>
